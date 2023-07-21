@@ -1,5 +1,6 @@
 ﻿;------------------------------------------------------------------------------
-; Copyright (c) William Thompson 2023
+; Copyright (c) William Thompson
+; 21 July 2023
 ;
 ; This script was developed to automate some of the features in the game:
 ;
