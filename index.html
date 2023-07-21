@@ -1,26 +1,44 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Firestone Idle RPG</title>
 <style>
-*
+html
 {
+  font-family: courier new;
   background-color: #333;
-  color: white;
 }
 h1, h2, h3
 {
   text-align: center;
+  color: white;
 }
-iframe
+textarea
 {
   width: 90%;
-  height: 30em;
+  height: 40em;
+  background-color: #000;
+  color: white;
 }
 a
 {
-  background-color: 000;
+  background-color: #ccc;
 }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", () =>
+{
+  let target = 'https://williamthompsonj.github.io/Firestone/firestone.ahk';
+  
+  // download the script file as text so it doesn't auto-download on the client
+  fetch(target)
+  .then((response) => response.text())
+  .then((data) => {
+    let box = document.getElementById("foo");
+    box.value = data;
+  });
+});
+</script>
 </head>
 <body>
 <h2>Firestone Idle RPG</h2>
@@ -29,6 +47,8 @@ a
 <a href="firestone.ahk">Download Here - Right click and 'Save As...'</a>
 <br>
 <br>
-<iframe srcdoc="firestone.ahk"></ifreame>
+<textarea id="foo"></textarea>
 </body>
+
+
 </html>
