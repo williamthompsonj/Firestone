@@ -317,7 +317,7 @@ Loop
     Sleep 200
     Click, %x_map_claim%, %y_map_claim%
     Sleep 200
-    Click, %x_campaign_claim%, %y_campaign_claim%
+    Click, %x_map_claim%, %y_map_claim%
     Sleep 200
 
     ;----------------------------
