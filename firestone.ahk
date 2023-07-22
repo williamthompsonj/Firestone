@@ -1,44 +1,32 @@
 ﻿;------------------------------------------------------------------------------
-; Copyright (c) William Thompson
-; 22 July 2023
+; Copyright (c) William J. Thompson
+; 22 July 2023 @ 08:30AM PST
 ;
-; This script was developed to automate some of the features in the game:
-;
-; Firestone Idle RPG by R2 games
-;
-; This script is designed to run in full-screen mode, any resolution.
+; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
 ; Use the ` key (backtick) to activate and = key (equals) to deactivate
 ;
-; Hotkeys on keyboard:
-; --------------------
-; A: Alchemist
-; B: Bag
-; C: Character menu
-; E: Temple of Eternals
-; G: Guardian menu (magic quarter)
-; H: Hall of Heroes
-; L: Library
-; M: Map
-; P: Party
-; Q: Quests
-; S: Settings
-; T: Town
-; U: Upgrades
-; X: Exotic Merchant
+; Actions this script performs:
+; -----------------------------
+; - Upgrade special, guardian, all heroes
+; - Train guardian (Free)
+; - Collect map missions (does not start new ones)
+; - (Level 50+) Collect pickaxes
+; - (Level 50+) Claim campaign bonus
 ;------------------------------------------------------------------------------
 
 ;----------------------------
-; change if character below lv 50
+; set to false if below lv 50
 ;----------------------------
 AboveLv50 := true
 
-;----------------------------------------------------------
-; Title of your game window (change if website)
-;----------------------------------------------------------
+;----------------------------
+; Title of the game window
+;----------------------------
 WindowTitle := "Firestone"
-; use this title if playing on chrome / kongregate
-;WindowTitle := "Play Firestone Idle RPG, a free online game on Kongregate - Google Chrome"
+
+; use this title if playing on Kongregate
+;WindowTitle := "Play Firestone Idle RPG"
 
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
@@ -48,10 +36,10 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force
 
 RunScript := false
-SmallLoop := 0
-LargeLoop := 0
-Max_SmallLoop := 8
-Max_LargeLoop := 150
+TinyLoop := 0
+BigLoop := 0
+Max_TinyLoop := 8
+Max_BigLoop := 150
 
 ; middle of screen (path for beer dragon and meteor guy)
 x_middle_screen := 0
@@ -134,7 +122,7 @@ y_campaign_claim := 0
 ;----------------------------------------------------------
 `::
 RunScript := true
-LargeLoop := Floor(Max_LargeLoop / 2) ; keep track of how many cycles we've done
+BigLoop := Floor(Max_BigLoop / 2) ; keep track of how many cycles we've done
 
 if WinExist(WindowTitle)
 {
@@ -208,11 +196,11 @@ if WinExist(WindowTitle)
   ; expedition button complete/start
   x_exped_button := Floor(wide * 0.69)
   y_exped_button := Floor(high * 0.30)
-  
+
   ; map claim button
   x_map_claim := Floor(wide * 0.10)
   y_map_claim := Floor(high * 0.30)
-  
+
   ; map okay button
   x_map_okay := Floor(wide * 0.498) ;956
   y_map_okay := Floor(high * 0.435) ;470
@@ -228,47 +216,47 @@ if WinExist(WindowTitle)
 }
 else
 {
-  ;----------------------------
-  ; send ` if game not running
-  ;----------------------------
-  Send {`}
+  MsgBox, "Firestone is not running"
   return
 }
 
 ;----------------------------
-; Main loop that runs clicker
+; Main clicker loop
 ;----------------------------
 Loop
 {
   if (RunScript == false)
     break
 
-  if (SmallLoop < Max_SmallLoop)
+  if (TinyLoop > Max_TinyLoop)
   {
     ;----------------------------
     ; click middle of the screen
     ;----------------------------
     Click, %x_middle_screen%, %y_middle_screen%
-    SmallLoop += 1
+    TinyLoop += 1
   }
   else
   {
     ;----------------------------
-    ; click special upgrade button
+    ; special upgrade button
     ;----------------------------
     Click, %x_upgrade_special%, %y_upgrade_special%
     Send {U}
-    SmallLoop := 0
+    TinyLoop := 0
   }
   Sleep 120
-  Send {3}
+  Send {3} ; keep party leader ability #3 active
 
-  if (LargeLoop > Max_LargeLoop)
+  ;----------------------------
+  ; approx. every ~18 seconds
+  ;----------------------------
+  if (BigLoop > Max_BigLoop)
   {
-    LargeLoop := 0
+    BigLoop := 0
 
     ;----------------------------
-    ; open guardian screen and click train
+    ; train guardian (free)
     ;----------------------------
     Send {G}
     Sleep 500
@@ -281,7 +269,7 @@ Loop
       break
 
     ;----------------------------
-    ; open guild screen for expeditions
+    ; guild expeditions
     ;----------------------------
     Click, %x_guild%, %y_guild%
     Sleep 200
@@ -291,12 +279,11 @@ Loop
     Sleep 200
     Click, %x_exped_button%, %y_exped_button%
     Sleep 200
-    ; click off bottom corner to ensure nothing is selected
     Click, %wide%, %high%
     Sleep 200
-    
+
     ;----------------------------
-    ; open the guild shop and get pickaxes
+    ; collect free pickaxes
     ;----------------------------
     if (AboveLv50 == true)
     {
@@ -306,11 +293,10 @@ Loop
       Sleep 200
       Click, %x_guild_shop_pickaxes%, %y_guild_shop_pickaxes%
       Sleep 200
-      ; close twice to get out of guild shop and guild screen
       Click, %x_close_full%, %y_close_full%
       Sleep 200
     }
-    
+
     ;----------------------------
     ; close guild window
     ;----------------------------
@@ -321,7 +307,7 @@ Loop
       break
 
     ;----------------------------
-    ; open map and click stuff
+    ; claim map mission on top
     ;----------------------------
     Send {M}
     Sleep 200
@@ -329,12 +315,9 @@ Loop
     Sleep 200
     Click, %x_map_okay%, %y_map_okay%
     Sleep 200
-    ; click off bottom corner to ensure nothing is selected
-    Click, %wide%, %high%
-    Sleep 200
 
     ;----------------------------
-    ; free campaign stuff
+    ; claim campaign bonus
     ;----------------------------
     if (AboveLv50 == true)
     {
@@ -375,7 +358,7 @@ Loop
   else
   {
     ; keep counting
-    LargeLoop += 1
+    BigLoop += 1
   }
 }
 return
@@ -393,9 +376,6 @@ if WinExist(WindowTitle)
 }
 else
 {
-  ;----------------------------
-  ; send = if game not running
-  ;----------------------------
-  Send {=}
+  MsgBox, "Firestone is not running"
 }
 return
