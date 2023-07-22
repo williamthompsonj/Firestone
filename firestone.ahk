@@ -1,6 +1,5 @@
 ﻿;------------------------------------------------------------------------------
-; Copyright (c) William Thompson
-; 21 July 2023
+; Copyright (c) William Thompson 2023
 ;
 ; This script was developed to automate some of the features in the game:
 ;
@@ -113,6 +112,10 @@ y_guild_shop_pickaxes := 0
 x_exped := 0
 y_exped := 0
 
+; map claim button
+x_map_claim := 0
+y_map_claim := 0
+
 ; campaign button on map
 x_campaign := 0
 y_campaign := 0
@@ -200,6 +203,10 @@ if WinExist(WindowTitle)
   ; expedition button complete/start
   x_exped_button := Floor(wide * 0.69)
   y_exped_button := Floor(high * 0.30)
+  
+  ; map claim button
+  x_map_claim := Floor(wide * 0.10)
+  y_map_claim := Floor(high * 0.30)
 
   ; campaign button on the map
   x_campaign := Floor(wide * 0.96)
@@ -304,21 +311,28 @@ Loop
       break
 
     ;----------------------------
-    ; open map and click free stuff button
+    ; open map and click stuff
+    ;----------------------------
+    Send {M}
+    Sleep 200
+    Click, %x_map_claim%, %y_map_claim%
+    Sleep 200
+    Click, %x_campaign_claim%, %y_campaign_claim%
+    Sleep 200
+
+    ;----------------------------
+    ; free campaign stuff
     ;----------------------------
     if (AboveLv50 == true)
     {
-      Send {M}
-      Sleep 200
       Click, %x_campaign%, %y_campaign%
       Sleep 200
       Click, %x_campaign_claim%, %y_campaign_claim%
       Sleep 200
-      Click, %x_campaign_claim%, %y_campaign_claim%
-      Sleep 200
-      Click, %x_close_full%, %y_close_full%
-      Sleep 200
     }
+
+    Click, %x_close_full%, %y_close_full%
+    Sleep 200
 
     if (RunScript == false)
       break
