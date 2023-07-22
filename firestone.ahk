@@ -342,6 +342,8 @@ Loop
     ;----------------------------
     Send {U}
     Sleep 200
+    Click, %x_upgrade_special%, %y_upgrade_special%
+    Sleep 200
     Click, %x_upgrade_guard%, %y_upgrade_guard%
     Sleep 200
     Click, %x_upgrade_hero1%, %y_upgrade_hero1%
