@@ -231,19 +231,19 @@ Loop
   if (TinyLoop > Max_TinyLoop)
   {
     ;----------------------------
-    ; click middle of the screen
-    ;----------------------------
-    Click, %x_middle_screen%, %y_middle_screen%
-    TinyLoop += 1
-  }
-  else
-  {
-    ;----------------------------
     ; special upgrade button
     ;----------------------------
     Click, %x_upgrade_special%, %y_upgrade_special%
     Send {U}
     TinyLoop := 0
+  }
+  else
+  {
+    ;----------------------------
+    ; click middle of the screen
+    ;----------------------------
+    Click, %x_middle_screen%, %y_middle_screen%
+    TinyLoop += 1
   }
   Sleep 120
   Send {3} ; keep party leader ability #3 active
