@@ -1,5 +1,6 @@
 ﻿;------------------------------------------------------------------------------
-; Copyright (c) William Thompson 2023
+; Copyright (c) William Thompson
+; 22 July 2023
 ;
 ; This script was developed to automate some of the features in the game:
 ;
@@ -116,6 +117,10 @@ y_exped := 0
 x_map_claim := 0
 y_map_claim := 0
 
+; map okay button
+x_map_okay := 0
+y_map_okay := 0
+
 ; campaign button on map
 x_campaign := 0
 y_campaign := 0
@@ -207,6 +212,11 @@ if WinExist(WindowTitle)
   ; map claim button
   x_map_claim := Floor(wide * 0.10)
   y_map_claim := Floor(high * 0.30)
+  
+  ; map okay button
+  x_map_okay := Floor(wide * 0.498) ;956
+  y_map_okay := Floor(high * 0.435) ;470
+
 
   ; campaign button on the map
   x_campaign := Floor(wide * 0.96)
@@ -281,8 +291,8 @@ Loop
     Sleep 200
     Click, %x_exped_button%, %y_exped_button%
     Sleep 200
-    ; just click off the window, position doesn't matter
-    Click, %x_upgrade_special%, %y_upgrade_special%
+    ; click off bottom corner to ensure nothing is selected
+    Click, %wide%, %high%
     Sleep 200
     
     ;----------------------------
@@ -317,7 +327,10 @@ Loop
     Sleep 200
     Click, %x_map_claim%, %y_map_claim%
     Sleep 200
-    Click, %x_map_claim%, %y_map_claim%
+    Click, %x_map_okay%, %y_map_okay%
+    Sleep 200
+    ; click off bottom corner to ensure nothing is selected
+    Click, %wide%, %high%
     Sleep 200
 
     ;----------------------------
