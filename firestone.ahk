@@ -19,7 +19,7 @@
 ;----------------------------
 ; set to false if below lv 50
 ;----------------------------
-AboveLv50 := true
+AboveLv50 := false
 
 ;----------------------------
 ; Title of the game window
@@ -40,7 +40,13 @@ WindowTitle := "Firestone"
 ; next day.
 ;----------------------------
 DailyCollect := true
-DailyDone := true
+DailyReady := false
+
+;----------------------------
+; play tavern every 2 hours
+;----------------------------
+TavernPlay := true
+TavernReady := true
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -58,14 +64,12 @@ Max_BigLoop := 150
 ; Stop when user presses = key (equals)
 ;----------------------------------------------------------
 `::
-if WinExist(WindowTitle)
+if not WinExist(WindowTitle)
 {
-  RunScript := false
+  MsgBox, "Cannot find Firestone"
 }
-else
-{
-  MsgBox, "Firestone is not running"
-}
+
+RunScript := false
 return
 
 ;----------------------------------------------------------
@@ -134,7 +138,7 @@ y_upgrade_hero5 := Floor(high * 0.83)
 x_train := Floor(wide * 0.60)
 y_train := Floor(high * 0.73)
 
-; shop button on main screen
+; shop button in town
 x_shop := Floor(wide * 0.96)
 y_shop := Floor(high * 0.55)
 
@@ -149,6 +153,18 @@ y_shop_calendar := Floor(high * 0.100)
 ; shop check-in button on calendar
 x_shop_checkin := Floor(wide * 0.705)
 y_shop_checkin := Floor(high * 0.801)
+
+; tavern in town
+x_tavern := Floor(wide * 0.396)
+y_tavern := Floor(high * 0.889)
+
+; tavern get token / play 10 button
+x_tavern_play := Floor(wide * 0.563)
+y_tavern_play := Floor(high * 0.926)
+
+; tavern get game tokens button
+x_tavern_tokens := Floor(wide * 0.182)
+y_tavern_tokens := Floor(high * 0.509)
 
 ; guild button on main screen
 x_guild := Floor(wide * 0.96)
@@ -218,27 +234,71 @@ Loop
   }
   Sleep 120
   Send {3} ; keep party leader ability #3 active
-  
+
   ;----------------------------
-  ; do daily tasks exactly once
+  ; collect daily mystery box and check-in
   ;----------------------------
-  if (DailyCollect == true && Floor(A_Hour) == 10 && DailyDone == false)
+  if (DailyCollect == true)
   {
-    DailyDone == true
-    Click, %x_shop%, %y_shop%
-    Sleep 200
-    Click, %x_shop_gift%, %y_shop_gift%
-    Sleep 200
-    Click, %x_shop_calendar%, %y_shop_calendar%
-    Sleep 200
-    Click, %x_shop_checkin%, %y_shop_checkin%
-    Sleep 200
-    Click, %x_close_full%, %y_close_full%
-    Sleep 200
+    Send {space down}
+    if(A_Hour == 10 && DailyReady == true)
+    {
+      DailyReady == false
+      Click, %x_shop%, %y_shop%
+      Sleep 200
+      Click, %x_shop_gift%, %y_shop_gift%
+      Sleep 200
+      Click, %x_shop_calendar%, %y_shop_calendar%
+      Sleep 200
+      Click, %x_shop_checkin%, %y_shop_checkin%
+      Sleep 200
+      Click, %x_close_full%, %y_close_full%
+      Sleep 200
+    }
+    else if (A_Time != 10)
+    {
+      DailyReady == true
+    }
+    Send {space up}
   }
-  else if (DailyCollect == true && A_Time != 10)
+
+  ;----------------------------
+  ; play tavern games
+  ;----------------------------
+  if (TavernPlay == true)
   {
-    DailyDone == false
+    Send {space down}
+    if(Mod(A_Hour, 2) == 1 && TavernReady == true)
+    {
+      TavernReady == false
+      Send {t}
+      Sleep 200
+      Click, %x_tavern%, %y_tavern%
+      Sleep 200
+      Click, %x_tavern_play%, %y_tavern_play%
+      Sleep 200
+      Click, %x_tavern_tokens%, %y_tavern_tokens%
+      Sleep 200
+      Click, %x_tavern_tokens%, %y_tavern_tokens%
+      Sleep 200
+      Click, %wide%, %high%
+      Sleep 200
+      Click, %x_tavern_play%, %y_tavern_play%
+      Sleep 200
+      Click, %x_middle_screen%, %y_middle_screen%
+      Sleep 200
+      Click, %wide%, %high%
+      Sleep 200
+      Click, %x_close_full%, %y_close_full%
+      Sleep 200
+      Click, %x_close_full%, %y_close_full%
+      Sleep 200
+    }
+    else if (Mod(A_Hour, 2) == 0)
+    {
+      TavernReady == true
+    }
+    Send {space up}
   }
 
   ;----------------------------
@@ -363,100 +423,3 @@ Loop
   }
 }
 return
-
-
-;----------------------------
-; environment variables
-;----------------------------
-
-; middle of screen (path for beer dragon and meteor guy)
-x_middle_screen := 0
-y_middle_screen := 0
-
-; close button (full screen window)
-x_close_full := 0
-y_close_full := 0
-
-; upgrade special
-x_upgrade_special := 0
-y_upgrade_special := 0
-
-; upgrade guardian
-x_upgrade_guard := 0
-y_upgrade_guard := 0
-
-; upgrade hero #1
-x_upgrade_hero1 := 0
-y_upgrade_hero1 := 0
-
-; upgrade hero #2
-x_upgrade_hero2 := 0
-y_upgrade_hero2 := 0
-
-; upgrade hero #3
-x_upgrade_hero3 := 0
-y_upgrade_hero3 := 0
-
-; upgrade hero #4
-x_upgrade_hero4 := 0
-y_upgrade_hero4 := 0
-
-; upgrade hero #5
-x_upgrade_hero5 := 0
-y_upgrade_hero5 := 0
-
-; train guardian (magic quarter)
-x_train := 0
-y_train := 0
-
-; shop button on main screen
-x_shop := 0
-y_shop := 0
-
-; shop mystery gift
-x_shop_gift := 0
-y_shop_gift := 0
-
-; shop calendar tab
-x_shop_calendar := 0
-y_shop_calendar := 0
-
-; shop check-in button on calendar
-x_shop_checkin := 0
-y_shop_checkin := 0
-
-; guild button on main page
-x_guild := 0
-y_guild := 0
-
-; guild shop
-x_guild_shop := 0
-y_guild_shop := 0
-
-; guild shop supplies
-x_guild_shop_supplies := 0
-y_guild_shop_supplies := 0
-
-; guild shop pickaxes
-x_guild_shop_pickaxes := 0
-y_guild_shop_pickaxes := 0
-
-; guild expedition button
-x_exped := 0
-y_exped := 0
-
-; map claim button
-x_map_claim := 0
-y_map_claim := 0
-
-; map okay button
-x_map_okay := 0
-y_map_okay := 0
-
-; campaign button on map
-x_campaign := 0
-y_campaign := 0
-
-; claim campaign award button
-x_campaign_claim := 0
-y_campaign_claim := 0
