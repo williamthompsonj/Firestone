@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 06:30AM PST
+; 23 July 2023 @ 08:45AM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -37,7 +37,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 RunScript := false
 TinyLoop := 0
 BigLoop := 0
-Max_TinyLoop := 8
+Max_TinyLoop := 9
 Max_BigLoop := 150
 
 ;----------------------------------------------------------
@@ -149,8 +149,8 @@ x_map_claim := Floor(wide * 0.10)
 y_map_claim := Floor(high * 0.30)
 
 ; map okay button
-x_map_okay := Floor(wide * 0.498) ;956
-y_map_okay := Floor(high * 0.435) ;470
+x_map_okay := Floor(wide * 0.500)
+y_map_okay := Floor(high * 0.435)
 
 
 ; campaign button on the map
@@ -175,7 +175,7 @@ Loop
     ; special upgrade button
     ;----------------------------
     Click, %x_upgrade_special%, %y_upgrade_special%
-    Send {u}
+    Send {u} ; toggle upgrade pane
     TinyLoop := 0
   }
   else
@@ -197,15 +197,29 @@ Loop
     BigLoop := 0
 
     ;----------------------------
-    ; train guardian (free)
+    ; claim map mission on top
     ;----------------------------
     Send {space down}
-    Send {g}
-    Sleep 500
-    Click, %x_train%, %y_train%
-    Sleep 500
+    Send {m}
+    Sleep 200
+    Click, %x_map_claim%, %y_map_claim%
+    Sleep 200
+    Click, %x_map_okay%, %y_map_okay%
+    Sleep 200
+
+    ;----------------------------
+    ; claim campaign bonus
+    ;----------------------------
+    if (AboveLv50 == true)
+    {
+      Click, %x_campaign%, %y_campaign%
+      Sleep 200
+      Click, %x_campaign_claim%, %y_campaign_claim%
+      Sleep 200
+    }
+
     Click, %x_close_full%, %y_close_full%
-    Sleep 500
+    Sleep 200
     Send {space up}
 
     if (RunScript == false)
@@ -252,29 +266,15 @@ Loop
       break
 
     ;----------------------------
-    ; claim map mission on top
+    ; train guardian (free)
     ;----------------------------
     Send {space down}
-    Send {m}
-    Sleep 200
-    Click, %x_map_claim%, %y_map_claim%
-    Sleep 200
-    Click, %x_map_okay%, %y_map_okay%
-    Sleep 200
-
-    ;----------------------------
-    ; claim campaign bonus
-    ;----------------------------
-    if (AboveLv50 == true)
-    {
-      Click, %x_campaign%, %y_campaign%
-      Sleep 200
-      Click, %x_campaign_claim%, %y_campaign_claim%
-      Sleep 200
-    }
-
+    Send {g}
+    Sleep 500
+    Click, %x_train%, %y_train%
+    Sleep 500
     Click, %x_close_full%, %y_close_full%
-    Sleep 200
+    Sleep 500
     Send {space up}
 
     if (RunScript == false)
