@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 08:45AM PST
+; 23 July 2023 @ 10:35AM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -11,6 +11,7 @@
 ; - Upgrade special, guardian, all heroes
 ; - Train guardian (Free)
 ; - Collect map missions (does not start new ones)
+; - Collect daily mystery box and daily check-in (once after 10am)
 ; - (Level 50+) Collect pickaxes
 ; - (Level 50+) Claim campaign bonus
 ;------------------------------------------------------------------------------
@@ -26,7 +27,20 @@ AboveLv50 := true
 WindowTitle := "Firestone"
 
 ; use this title if playing on Kongregate
-;WindowTitle := "Play Firestone Idle RPG"
+;WindowTitle := "Play Firestone"
+
+;----------------------------
+; collect daily mystery gift and check-in
+; after 10am occurs
+;
+; set DailyCollect to false to disable
+;
+; NOTE: will only collect if running when
+; 10am occurs, otherwise will wait until
+; next day.
+;----------------------------
+DailyCollect := true
+DailyDone := true
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -120,6 +134,22 @@ y_upgrade_hero5 := Floor(high * 0.83)
 x_train := Floor(wide * 0.60)
 y_train := Floor(high * 0.73)
 
+; shop button on main screen
+x_shop := Floor(wide * 0.96)
+y_shop := Floor(high * 0.55)
+
+; shop mystery gift
+x_shop_gift := Floor(wide * 0.35)
+y_shop_gift := Floor(high * 0.60)
+
+; shop calendar tab
+x_shop_calendar := Floor(wide * 0.737)
+y_shop_calendar := Floor(high * 0.100)
+
+; shop check-in button on calendar
+x_shop_checkin := Floor(wide * 0.705)
+y_shop_checkin := Floor(high * 0.801)
+
 ; guild button on main screen
 x_guild := Floor(wide * 0.96)
 y_guild := Floor(high * 0.43)
@@ -188,6 +218,28 @@ Loop
   }
   Sleep 120
   Send {3} ; keep party leader ability #3 active
+  
+  ;----------------------------
+  ; do daily tasks exactly once
+  ;----------------------------
+  if (DailyCollect == true && Floor(A_Hour) == 10 && DailyDone == false)
+  {
+    DailyDone == true
+    Click, %x_shop%, %y_shop%
+    Sleep 200
+    Click, %x_shop_gift%, %y_shop_gift%
+    Sleep 200
+    Click, %x_shop_calendar%, %y_shop_calendar%
+    Sleep 200
+    Click, %x_shop_checkin%, %y_shop_checkin%
+    Sleep 200
+    Click, %x_close_full%, %y_close_full%
+    Sleep 200
+  }
+  else if (DailyCollect == true && A_Time != 10)
+  {
+    DailyDone == false
+  }
 
   ;----------------------------
   ; approx. every ~18 seconds
@@ -356,6 +408,22 @@ y_upgrade_hero5 := 0
 ; train guardian (magic quarter)
 x_train := 0
 y_train := 0
+
+; shop button on main screen
+x_shop := 0
+y_shop := 0
+
+; shop mystery gift
+x_shop_gift := 0
+y_shop_gift := 0
+
+; shop calendar tab
+x_shop_calendar := 0
+y_shop_calendar := 0
+
+; shop check-in button on calendar
+x_shop_checkin := 0
+y_shop_checkin := 0
 
 ; guild button on main page
 x_guild := 0
