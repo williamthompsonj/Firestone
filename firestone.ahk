@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 01:45PM PST
+; 23 July 2023 @ 02:05PM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -12,6 +12,7 @@
 ; - Train guardian (Free)
 ; - Collect map missions (does not start new ones)
 ; - Collect daily mystery box and daily check-in (once after 10am)
+; - Play tavern beer gave every 2 hours
 ; - (Level 50+) Collect pickaxes
 ; - (Level 50+) Claim campaign bonus
 ;------------------------------------------------------------------------------
