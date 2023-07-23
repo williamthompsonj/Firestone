@@ -4,7 +4,7 @@
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
-; Use the Ctrl+` key (Ctrl+backtick) to activate and Ctrl+Esc key (Ctrl+escape) to deactivate
+; Use the Ctrl+` key (Ctrl+backtick) to activate and ` key (backtick by itself) to deactivate
 ;
 ; Actions this script performs:
 ; -----------------------------
@@ -43,7 +43,7 @@ Max_BigLoop := 150
 ;----------------------------------------------------------
 ; Stop when user presses = key (equals)
 ;----------------------------------------------------------
-^Esc::
+`::
 if WinExist(WindowTitle)
 {
   RunScript := false
