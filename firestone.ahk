@@ -12,7 +12,8 @@
 ; - Train guardian (Free)
 ; - Collect map missions (does not start new ones)
 ; - Collect daily mystery box and daily check-in (once after 10am)
-; - Play tavern beer gave every 2 hours
+; - Play tavern beer games every 2 hours
+; - Claim daily & weekly quests
 ; - (Level 50+) Collect pickaxes
 ; - (Level 50+) Claim campaign bonus
 ;------------------------------------------------------------------------------
