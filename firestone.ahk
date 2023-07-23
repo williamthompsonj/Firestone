@@ -159,12 +159,20 @@ x_tavern := Floor(wide * 0.396)
 y_tavern := Floor(high * 0.889)
 
 ; tavern get token / play 10 button
-x_tavern_play := Floor(wide * 0.563)
-y_tavern_play := Floor(high * 0.926)
+x_tavern_get := Floor(wide * 0.563)
+y_tavern_get := Floor(high * 0.926)
+
+; tavern get token / play 10 button
+x_tavern_play5 := Floor(wide * 0.599)
+y_tavern_play5 := Floor(high * 0.926)
 
 ; tavern get game tokens button
 x_tavern_tokens := Floor(wide * 0.182)
 y_tavern_tokens := Floor(high * 0.509)
+
+; tavern get game tokens button
+x_tavern_card := Floor(wide * 0.5)
+y_tavern_card := Floor(high * 0.7)
 
 ; guild button on main screen
 x_guild := Floor(wide * 0.96)
@@ -197,7 +205,6 @@ y_map_claim := Floor(high * 0.30)
 ; map okay button
 x_map_okay := Floor(wide * 0.500)
 y_map_okay := Floor(high * 0.435)
-
 
 ; campaign button on the map
 x_campaign := Floor(wide * 0.96)
@@ -275,18 +282,16 @@ Loop
       Sleep 200
       Click, %x_tavern%, %y_tavern%
       Sleep 200
-      Click, %x_tavern_play%, %y_tavern_play%
+      Click, %x_tavern_get%, %y_tavern_get%
       Sleep 200
       Click, %x_tavern_tokens%, %y_tavern_tokens%
-      Sleep 200
-      Click, %x_tavern_tokens%, %y_tavern_tokens%
-      Sleep 200
+      Sleep 2000
       Click, %wide%, %high%
       Sleep 200
-      Click, %x_tavern_play%, %y_tavern_play%
-      Sleep 200
-      Click, %x_middle_screen%, %y_middle_screen%
-      Sleep 200
+      Click, %x_tavern_play5%, %y_tavern_play5%
+      Sleep 2000
+      Click, %x_tavern_card%, %y_tavern_card%
+      Sleep 5000
       Click, %wide%, %high%
       Sleep 200
       Click, %x_close_full%, %y_close_full%
