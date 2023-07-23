@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 02:13PM PST
+; 23 July 2023 @ 02:33PM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -34,8 +34,6 @@ WindowTitle := "Firestone"
 ; collect daily mystery gift and check-in
 ; after 10am occurs
 ;
-; set DailyCollect to false to disable
-;
 ; NOTE: will only collect if running when
 ; 10am occurs, otherwise will wait until
 ; next day.
@@ -47,7 +45,13 @@ DailyReady := false
 ; play tavern every 2 hours
 ;----------------------------
 TavernPlay := true
-TavernReady := true
+TavernReady := false
+
+;----------------------------
+; daily and weekly quest claim
+;----------------------------
+QuestCollect := true
+QuestReady := false
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -106,6 +110,10 @@ y_middle_screen := Floor(high * 0.30)
 ; normal close button
 x_close_full := Floor(wide * 0.958)
 y_close_full := Floor(high * 0.052)
+
+; inset close button
+x_close_inset := Floor(wide * 0.924)
+y_close_inset := Floor(high * 0.081)
 
 ; upgrade special button
 x_upgrade_special := Floor(wide * 0.92)
@@ -174,6 +182,18 @@ y_tavern_tokens := Floor(high * 0.509)
 ; tavern get game tokens button
 x_tavern_card := Floor(wide * 0.5)
 y_tavern_card := Floor(high * 0.7)
+
+; quest daily button
+x_quest_daily := Floor(wide * 0.375)
+y_quest_daily := Floor(high * 0.129)
+
+; quest weekly button
+x_quest_weekly := Floor(wide * 0.589)
+y_quest_weekly := Floor(high * 0.129)
+
+; quest claim button
+x_quest_claim := Floor(wide * 0.807)
+y_quest_claim := Floor(high * 0.284)
 
 ; guild button on main screen
 x_guild := Floor(wide * 0.96)
@@ -301,6 +321,35 @@ Loop
     else if (Mod(A_Hour, 2) == 0)
     {
       TavernReady == true
+    }
+    Send {space up}
+  }
+
+  ;----------------------------
+  ; daily and weekly quests
+  ;----------------------------
+  if (QuestCollect == true)
+  {
+    Send {space down}
+    if(Mod(A_Hour, 2) == 0 && QuestReady == true)
+    {
+      QuestReady == false
+      Send {q}
+      Sleep 200
+      Click, %x_quest_daily%, %y_quest_daily%
+      Sleep 200
+      Click, %x_quest_claim%, %y_quest_claim%
+      Sleep 200
+      Click, %x_quest_weekly%, %y_quest_weekly%
+      Sleep 200
+      Click, %x_quest_claim%, %y_quest_claim%
+      Sleep 200
+      Click, %x_close_inset%, %y_close_inset%
+      Sleep 200
+    }
+    else if (Mod(A_Hour, 2) == 0)
+    {
+      QuestReady == true
     }
     Send {space up}
   }
