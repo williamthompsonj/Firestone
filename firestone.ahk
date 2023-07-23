@@ -269,9 +269,9 @@ Loop
   ;----------------------------
   if (DailyCollect == true)
   {
-    Send {space down}
     if(A_Hour == 10 && DailyReady == true)
     {
+      Send {space down}
       DailyReady == false
       Click, %x_shop%, %y_shop%
       Sleep 200
@@ -283,12 +283,12 @@ Loop
       Sleep 200
       Click, %x_close_full%, %y_close_full%
       Sleep 200
+      Send {space up}
     }
     else if (A_Time != 10)
     {
       DailyReady == true
     }
-    Send {space up}
   }
 
   ;----------------------------
@@ -296,10 +296,10 @@ Loop
   ;----------------------------
   if (TavernPlay == true)
   {
-    Send {space down}
-    if(Mod(A_Hour, 2) == 0 && TavernReady == true)
+    if(Mod(A_Hour, 2) == 0 && TavernReady = true)
     {
-      TavernReady == false
+      Send {space down}
+      TavernReady := false
       Send {t}
       Sleep 200
       Click, %x_tavern%, %y_tavern%
@@ -318,12 +318,12 @@ Loop
       Sleep 200
       Click, %x_close_full%, %y_close_full%
       Sleep 200
+      Send {space up}
     }
-    else if (Mod(A_Hour, 2) == 0)
+    else if (Mod(A_Hour, 2) != 0)
     {
-      TavernReady == true
+      TavernReady := true
     }
-    Send {space up}
   }
 
   ;----------------------------
@@ -331,10 +331,10 @@ Loop
   ;----------------------------
   if (QuestCollect == true)
   {
-    Send {space down}
     if(Mod(A_Hour, 2) == 0 && QuestReady == true)
     {
-      QuestReady == false
+      Send {space down}
+      QuestReady := false
       Send {q}
       Sleep 200
       Click, %x_quest_daily%, %y_quest_daily%
@@ -347,12 +347,12 @@ Loop
       Sleep 200
       Click, %x_close_inset%, %y_close_inset%
       Sleep 200
+      Send {space up}
     }
-    else if (Mod(A_Hour, 2) == 0)
+    else if (Mod(A_Hour, 2) != 0)
     {
-      QuestReady == true
+      QuestReady := true
     }
-    Send {space up}
   }
 
   ;----------------------------
