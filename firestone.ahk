@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 05:06PM PST
+; 24 July 2023 @ 07:00AM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -308,7 +308,7 @@ Loop
       Sleep 200
       Click, %x_tavern_tokens%, %y_tavern_tokens%
       Sleep 2000
-      Click, %wide%, %high%
+      Click, %x_close_inset%, %y_close_inset%
       Sleep 200
       Click, %x_tavern_play5%, %y_tavern_play5%
       Sleep 2500
@@ -403,7 +403,7 @@ Loop
     Sleep 200
     Click, %x_exped_button%, %y_exped_button%
     Sleep 200
-    Click, %wide%, %high%
+    Click, %x_close_inset%, %y_close_inset%
     Sleep 200
 
     ;----------------------------
