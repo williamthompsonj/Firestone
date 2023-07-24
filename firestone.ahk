@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 24 July 2023 @ 10:15AM PST
+; 24 July 2023 @ 10:30AM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -288,7 +288,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (DailyReady == false && A_Time != 10)
+    else if (DailyReady == false && A_Hour != 10)
     {
       DailyReady := true
     }
