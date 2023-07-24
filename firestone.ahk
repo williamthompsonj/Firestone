@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 23 July 2023 @ 04:57PM PST
+; 23 July 2023 @ 05:06PM PST
 ;
 ; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
 ;
@@ -269,7 +269,7 @@ Loop
   ;----------------------------
   if (DailyCollect == true)
   {
-    if(A_Hour == 10 && DailyReady == true)
+    if(DailyReady == true && A_Hour == 10)
     {
       Send {space down}
       DailyReady := false
@@ -285,7 +285,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (A_Time != 10)
+    else if (DailyReady == false && A_Time != 10)
     {
       DailyReady := true
     }
@@ -296,7 +296,7 @@ Loop
   ;----------------------------
   if (TavernPlay == true)
   {
-    if(Mod(A_Hour, 2) == 0 && TavernReady = true)
+    if(TavernReady == true && Mod(A_Hour, 2) == 0)
     {
       Send {space down}
       TavernReady := false
@@ -320,7 +320,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (Mod(A_Hour, 2) != 0)
+    else if (TavernReady == false && Mod(A_Hour, 2) != 0)
     {
       TavernReady := true
     }
@@ -331,7 +331,7 @@ Loop
   ;----------------------------
   if (QuestCollect == true)
   {
-    if(Mod(A_Hour, 2) == 0 && QuestReady == true)
+    if(QuestReady == true && Mod(A_Hour, 2) == 0)
     {
       Send {space down}
       QuestReady := false
@@ -349,7 +349,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (Mod(A_Hour, 2) != 0)
+    else if (QuestReady == false && Mod(A_Hour, 2) != 0)
     {
       QuestReady := true
     }
