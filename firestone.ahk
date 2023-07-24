@@ -12,7 +12,7 @@
 ; - Train guardian (Free)
 ; - Collect map missions (does not start new ones)
 ; - Collect daily mystery box and daily check-in (once after 10am)
-; - Play tavern beer games every 2 hours
+; - Play tavern beer games every 6 hours
 ; - Claim daily & weekly quests
 ; - (Level 50+) Collect pickaxes
 ; - (Level 50+) Claim campaign bonus
@@ -43,7 +43,7 @@ DailyCollect := true
 DailyReady := false
 
 ;----------------------------
-; play tavern every 2 hours
+; play tavern games
 ;----------------------------
 TavernPlay := true
 TavernReady := false
@@ -61,10 +61,11 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance force
 
 RunScript := false
-TinyLoop := 0
-BigLoop := 0
-Max_TinyLoop := 9
-Max_BigLoop := 150
+TinyBlock := 0
+BigBlock := 0
+Max_TinyBlock := 8 ; cycles between open/close upgrade panel
+Max_BigBlock := 20 ; minimum seconds between big block run time
+BigBlockMark := 0 ; current time in seconds
 
 ;----------------------------------------------------------
 ; Stop when user presses = key (equals)
@@ -98,11 +99,14 @@ else
 ; setup everything to run
 ;----------------------------
 
+; count seconds since last BigBlock occurred
+DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
+
 ; script is running
 RunScript := true
 
 ; keep track of how many cycles we've done, start half way
-BigLoop := Floor(Max_BigLoop / 2)
+BigBlock := Floor(Max_BigBlock / 2)
 
 ; middle of the screen (beer dragon and meteor guy path)
 x_middle_screen := Floor(wide * 0.42)
@@ -244,14 +248,14 @@ Loop
   if (RunScript == false)
     break
 
-  if (TinyLoop > Max_TinyLoop)
+  if (TinyBlock >= Max_TinyBlock)
   {
     ;----------------------------
     ; special upgrade button
     ;----------------------------
     Click, %x_upgrade_special%, %y_upgrade_special%
     Send {u} ; toggle upgrade pane
-    TinyLoop := 0
+    TinyBlock := 0
   }
   else
   {
@@ -259,7 +263,7 @@ Loop
     ; click middle of the screen
     ;----------------------------
     Click, %x_middle_screen%, %y_middle_screen%
-    TinyLoop += 1
+    TinyBlock += 1
   }
   Sleep 120
   Send {3} ; keep party leader ability #3 active
@@ -296,7 +300,7 @@ Loop
   ;----------------------------
   if (TavernPlay == true)
   {
-    if(TavernReady == true && Mod(A_Hour, 2) == 0)
+    if(TavernReady == true && Mod(A_Hour, 6) == 0)
     {
       Send {space down}
       TavernReady := false
@@ -356,11 +360,14 @@ Loop
   }
 
   ;----------------------------
-  ; approx. every ~18 seconds
+  ; approx. every ~20 seconds
   ;----------------------------
-  if (BigLoop > Max_BigLoop)
+  DllCall("QueryPerformanceCounter", "UInt64*", BigBlock)
+  BigBlock := (BigBlock - BigBlockMark) // 10000000 ; seconds since script started
+
+  if (BigBlock >= Max_BigBlock)
   {
-    BigLoop := 0
+    DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
 
     ;----------------------------
     ; claim map mission on top
@@ -469,11 +476,6 @@ Loop
     Send {u}
     Sleep 200
     Send {space up}
-  }
-  else
-  {
-    ; keep counting
-    BigLoop += 1
   }
 }
 return
