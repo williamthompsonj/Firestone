@@ -47,12 +47,14 @@ DailyReady := false
 ;----------------------------
 TavernPlay := true
 TavernReady := false
+TavernPeriod := 6
 
 ;----------------------------
 ; daily and weekly quest claim
 ;----------------------------
 QuestCollect := true
 QuestReady := false
+QuestPeriod := 3
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
@@ -104,9 +106,6 @@ DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
 
 ; script is running
 RunScript := true
-
-; keep track of how many cycles we've done, start half way
-BigBlock := Floor(Max_BigBlock / 2)
 
 ; middle of the screen (beer dragon and meteor guy path)
 x_middle_screen := Floor(wide * 0.42)
@@ -300,7 +299,7 @@ Loop
   ;----------------------------
   if (TavernPlay == true)
   {
-    if(TavernReady == true && Mod(A_Hour, 6) == 0)
+    if(TavernReady == true && Mod(A_Hour, TavernPeriod) == 0)
     {
       Send {space down}
       TavernReady := false
@@ -324,7 +323,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (TavernReady == false && Mod(A_Hour, 2) != 0)
+    else if (TavernReady == false && Mod(A_Hour, TavernPeriod) != 0)
     {
       TavernReady := true
     }
@@ -335,7 +334,7 @@ Loop
   ;----------------------------
   if (QuestCollect == true)
   {
-    if(QuestReady == true && Mod(A_Hour, 2) == 0)
+    if(QuestReady == true && Mod(A_Hour, QuestPeriod) == 0)
     {
       Send {space down}
       QuestReady := false
@@ -353,7 +352,7 @@ Loop
       Sleep 200
       Send {space up}
     }
-    else if (QuestReady == false && Mod(A_Hour, 2) != 0)
+    else if (QuestReady == false && Mod(A_Hour, QuestPeriod) != 0)
     {
       QuestReady := true
     }
