@@ -140,9 +140,9 @@ StopScript := false
 
 ; screen coordinates of things
 middle_screen := {x:Floor(wide * 0.42), y:Floor(high * 0.30)}
-close_full := {x:Floor(wide * 0.973), y:Floor(high * 0.093)} ; 1868 x 100
+close_full := {x:Floor(wide * 0.973), y:Floor(high * 0.093)}
 close_inset := {x:Floor(wide * 0.924), y:Floor(high * 0.081)}
-upgrade_alert := {x:Floor(wide * 0.773), y:Floor(high * 0.851)}
+upgrade_alert := {x:Floor(wide * 0.773), y:Floor(high * 0.854)} ; 1485 x 923
 upgrade_special := {x:Floor(wide * 0.981), y:Floor(high * 0.207)}
 upgrade_guard := {x:Floor(wide * 0.981), y:Floor(high * 0.31)}
 upgrade_hero1 := {x:Floor(wide * 0.981), y:Floor(high * 0.41)}
