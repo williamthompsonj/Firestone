@@ -190,7 +190,7 @@ wm_liberation   := {x:Floor(wide * 0.400), y:Floor(high * 0.760)}
 wm_dungeon      := {x:Floor(wide * 0.600), y:Floor(high * 0.760)}
 check50         := {x:Floor(wide * 0.190), y:Floor(high * 0.272)} ; 364 x 294?
 check120        := {x:Floor(wide * 0.242), y:Floor(high * 0.815)}
-alchemist_blood := {x:Floor(wide * 0.461), y:Floor(high * 0.751)}
+alchemist_blood := {x:Floor(wide * 0.460), y:Floor(high * 0.750)}
 alchemist_dust  := {x:Floor(wide * 0.660), y:Floor(high * 0.739)}
 alchemist_coin  := {x:Floor(wide * 0.853), y:Floor(high * 0.739)}
 alch_new_blood  := {x:Floor(wide * 0.440), y:Floor(high * 0.739)}
@@ -316,15 +316,15 @@ Loop
       if(AboveLv120)
       {
         ClickPoint(check120)
-        ClickPoint(alchemist_blood, ColorOrange)
-        ClickPoint(alchemist_blood, ColorGreen)
+        if(!ClickPoint(alchemist_blood, ColorOrange))
+          ClickPoint(alchemist_blood, ColorGreen)
         if(NewAlchemistBlood)
           ClickPoint(alch_new_blood)
-        ClickPoint(alchemist_dust, ColorOrange)
+        if(!ClickPoint(alchemist_dust, ColorOrange))
         ClickPoint(alchemist_dust, ColorGreen)
         if(NewAlchemistDust)
           ClickPoint(alch_new_dust)
-        ClickPoint(alchemist_coin, ColorOrange)
+        if(!ClickPoint(alchemist_coin, ColorOrange))
         ClickPoint(alchemist_coin, ColorGreen)
         if(NewAlchemistCoin)
           ClickPoint(alch_new_coin)
