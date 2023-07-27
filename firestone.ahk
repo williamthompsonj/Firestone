@@ -1,8 +1,11 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 24 July 2023 @ 10:30AM PST
+; 27 July 2023 @ 00:00am PST
 ;
-; Automate some of Firestone Idle RPG by R2 games. Run in full-screen mode, any resolution.
+; Automate boring bits of Firestone Idle RPG by Holiday Games.
+; https://holydaygames.com/firestone-idle-rpg/
+;
+; Run in full-screen mode, any resolution.
 ;
 ; Use the Ctrl+` key (Ctrl+backtick) to activate and ` key (backtick by itself) to deactivate
 ;
@@ -14,21 +17,18 @@
 ; - Collect daily mystery box and daily check-in (once after 10am)
 ; - Play tavern beer games every 6 hours
 ; - Claim daily & weekly quests
+; - Collect Firestone research (does not start new ones)
 ; - (Level 50+) Collect pickaxes
 ; - (Level 50+) Claim campaign bonus
+; - (Level 120+) Collect Alchemist research (does not start new ones)
 ;------------------------------------------------------------------------------
-
-;----------------------------
-; set to false if below lv 50
-;----------------------------
-AboveLv50 := true
 
 ;----------------------------
 ; Title of the game window
 ;----------------------------
 WindowTitle := "Firestone"
 
-; use this title if playing on Kongregate
+; Kongregate website title
 ;WindowTitle := "Play Firestone"
 
 ;----------------------------
@@ -56,40 +56,59 @@ QuestCollect := true
 QuestReady := false
 QuestPeriod := 3
 
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#SingleInstance force
+;----------------------------
+; collect research
+;----------------------------
+ResearchCollect := true
+ResearchReady := true
+ResearchPeriod := 5 ; minutes
 
-RunScript := false
+;----------------------------
+; will change automatically
+;----------------------------
+AboveLv50 := false
+AboveLv120 := false
+
 TinyBlock := 0
 BigBlock := 0
 Max_TinyBlock := 8 ; cycles between open/close upgrade panel
 Max_BigBlock := 20 ; minimum seconds between big block run time
 BigBlockMark := 0 ; current time in seconds
+StopScript := true ; default is true
+
+ColorOrange := { r:237, g:145, b:64 }
+ColorGreen := { r:10, g:160, b:8 }
+ColorTeal := { r:27, g:112, b:159 }
+ColorBrown := { r:127, g:94, b:41 }
+ColorGray := { r:190, g:190, b:190 }
+
+#SingleInstance force ; silently kill any other instance and start new one
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ;----------------------------------------------------------
-; Stop when user presses = key (equals)
+; Stop when user presses ` key (backtick)
 ;----------------------------------------------------------
 `::
-if not WinExist(WindowTitle)
+if !WinExist(WindowTitle)
 {
-  MsgBox, "Cannot find Firestone"
+  ExitApp
 }
 
-RunScript := false
+StopScript := true
 return
 
 ;----------------------------------------------------------
 ; Activate when user presses ` key (backtick)
 ;----------------------------------------------------------
 ^`::
+; find and focus on Firestone window
 if WinExist(WindowTitle)
 {
-  ; find and focus on Firestone window
   WinActivate
-  WinGetPos, Xpos, Ypos, wide, high
+  WinGetPos, , , wide, high
 }
 else
 {
@@ -105,146 +124,61 @@ else
 DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
 
 ; script is running
-RunScript := true
+StopScript := false
 
-; middle of the screen (beer dragon and meteor guy path)
-x_middle_screen := Floor(wide * 0.42)
-y_middle_screen := Floor(high * 0.30)
+; screen coordinates of things
+middle_screen := {x:Floor(wide * 0.42), y:Floor(high * 0.30)}
+close_full := {x:Floor(wide * 0.958), y:Floor(high * 0.052)}
+close_inset := {x:Floor(wide * 0.924), y:Floor(high * 0.081)}
+upgrade_special := {x:Floor(wide * 0.981), y:Floor(high * 0.207)}
+upgrade_guard := {x:Floor(wide * 0.981), y:Floor(high * 0.31)}
+upgrade_hero1 := {x:Floor(wide * 0.981), y:Floor(high * 0.41)}
+upgrade_hero2 := {x:Floor(wide * 0.981), y:Floor(high * 0.52)}
+upgrade_hero3 := {x:Floor(wide * 0.981), y:Floor(high * 0.62)}
+upgrade_hero4 := {x:Floor(wide * 0.981), y:Floor(high * 0.73)}
+upgrade_hero5 := {x:Floor(wide * 0.981), y:Floor(high * 0.83)}
+train_guardian := {x:Floor(wide * 0.54), y:Floor(high * 0.74)}
+shop_button := {x:Floor(wide * 0.96), y:Floor(high * 0.55)}
+shop_gift := {x:Floor(wide * 0.35), y:Floor(high * 0.60)}
+shop_calendar := {x:Floor(wide * 0.737), y:Floor(high * 0.100)}
+shop_checkin := {x:Floor(wide * 0.705), y:Floor(high * 0.801)}
+tavern_icon := {x:Floor(wide * 0.406), y:Floor(high * 0.861)}
+tavern_market := {x:Floor(wide * 0.903), y:Floor(high * 0.074)}
+tavern_tokens := {x:Floor(wide * 0.343), y:Floor(high * 0.407)}
+tavern_play := {x:Floor(wide * 0.599), y:Floor(high * 0.926)}
+tavern_card := {x:Floor(wide * 0.5), y:Floor(high * 0.7)}
+quest_daily := {x:Floor(wide * 0.375), y:Floor(high * 0.129)}
+quest_weekly := {x:Floor(wide * 0.589), y:Floor(high * 0.129)}
+quest_claim1 := {x:Floor(wide * 0.744), y:Floor(high * 0.296)}
+quest_claim2 := {x:Floor(wide * 0.744), y:Floor(high * 0.463)}
+guild_button := {x:Floor(wide * 0.96), y:Floor(high * 0.43)}
+guild_shop := {x:Floor(wide * 0.325), y:Floor(high * 0.237)}
+guild_shop_supplies := {x:Floor(wide * 0.130), y:Floor(high * 0.712)}
+guild_shop_pickaxes := {x:Floor(wide * 0.357), y:Floor(high * 0.394)}
+expeditions := {x:Floor(wide * 0.14), y:Floor(high * 0.35)}
+exped_button := {x:Floor(wide * 0.659), y:Floor(high * 0.300)}
+map_claim := {x:Floor(wide * 0.10), y:Floor(high * 0.30)}
+map_okay := {x:Floor(wide * 0.567), y:Floor(high * 0.453)}
+map_free := {x:Floor(wide * 0.585), y:Floor(high * 0.903)}
+campaign_button := {x:Floor(wide * 0.96), y:Floor(high * 0.57)}
+campaign_claim := {x:Floor(wide * 0.11), y:Floor(high * 0.91)}
 
-; normal close button
-x_close_full := Floor(wide * 0.958)
-y_close_full := Floor(high * 0.052)
-
-; inset close button
-x_close_inset := Floor(wide * 0.924)
-y_close_inset := Floor(high * 0.081)
-
-; upgrade special button
-x_upgrade_special := Floor(wide * 0.92)
-y_upgrade_special := Floor(high * 0.20)
-
-; upgrade guardian button
-x_upgrade_guard := Floor(wide * 0.92)
-y_upgrade_guard := Floor(high * 0.31)
-
-; upgrade hero #1 button
-x_upgrade_hero1 := Floor(wide * 0.92)
-y_upgrade_hero1 := Floor(high * 0.41)
-
-; upgrade hero #2 button
-x_upgrade_hero2 := Floor(wide * 0.92)
-y_upgrade_hero2 := Floor(high * 0.52)
-
-; upgrade hero #3 button
-x_upgrade_hero3 := Floor(wide * 0.92)
-y_upgrade_hero3 := Floor(high * 0.62)
-
-; upgrade hero #4 button
-x_upgrade_hero4 := Floor(wide * 0.92)
-y_upgrade_hero4 := Floor(high * 0.73)
-
-; upgrade hero #5 button
-x_upgrade_hero5 := Floor(wide * 0.92)
-y_upgrade_hero5 := Floor(high * 0.83)
-
-; train guardian (magic quarter)
-x_train := Floor(wide * 0.60)
-y_train := Floor(high * 0.73)
-
-; shop button in town
-x_shop := Floor(wide * 0.96)
-y_shop := Floor(high * 0.55)
-
-; shop mystery gift
-x_shop_gift := Floor(wide * 0.35)
-y_shop_gift := Floor(high * 0.60)
-
-; shop calendar tab
-x_shop_calendar := Floor(wide * 0.737)
-y_shop_calendar := Floor(high * 0.100)
-
-; shop check-in button on calendar
-x_shop_checkin := Floor(wide * 0.705)
-y_shop_checkin := Floor(high * 0.801)
-
-; tavern in town
-x_tavern := Floor(wide * 0.396)
-y_tavern := Floor(high * 0.889)
-
-; tavern get token / play 10 button
-x_tavern_get := Floor(wide * 0.563)
-y_tavern_get := Floor(high * 0.926)
-
-; tavern get token / play 10 button
-x_tavern_play5 := Floor(wide * 0.599)
-y_tavern_play5 := Floor(high * 0.926)
-
-; tavern get game tokens button
-x_tavern_tokens := Floor(wide * 0.182)
-y_tavern_tokens := Floor(high * 0.509)
-
-; tavern get game tokens button
-x_tavern_card := Floor(wide * 0.5)
-y_tavern_card := Floor(high * 0.7)
-
-; quest daily button
-x_quest_daily := Floor(wide * 0.375)
-y_quest_daily := Floor(high * 0.129)
-
-; quest weekly button
-x_quest_weekly := Floor(wide * 0.589)
-y_quest_weekly := Floor(high * 0.129)
-
-; quest claim button
-x_quest_claim := Floor(wide * 0.807)
-y_quest_claim := Floor(high * 0.284)
-
-; guild button on main screen
-x_guild := Floor(wide * 0.96)
-y_guild := Floor(high * 0.43)
-
-; guild shop
-x_guild_shop := Floor(wide * 0.325)
-y_guild_shop := Floor(high * 0.237)
-
-; guild shop supplies
-x_guild_shop_supplies := Floor(wide * 0.091)
-y_guild_shop_supplies := Floor(high * 0.722)
-
-; guild shop pickaxes
-x_guild_shop_pickaxes := Floor(wide * 0.367)
-y_guild_shop_pickaxes := Floor(high * 0.444)
-
-; expedition tent in guild screen
-x_exped := Floor(wide * 0.14)
-y_exped := Floor(high * 0.35)
-
-; expedition button complete/start
-x_exped_button := Floor(wide * 0.69)
-y_exped_button := Floor(high * 0.30)
-
-; map claim button
-x_map_claim := Floor(wide * 0.10)
-y_map_claim := Floor(high * 0.30)
-
-; map okay button
-x_map_okay := Floor(wide * 0.500)
-y_map_okay := Floor(high * 0.435)
-
-; campaign button on the map
-x_campaign := Floor(wide * 0.96)
-y_campaign := Floor(high * 0.57)
-
-; campaign button on the map
-x_campaign_claim := Floor(wide * 0.11)
-y_campaign_claim := Floor(high * 0.91)
+check50 := {x:Floor(wide * 0.190), y:Floor(high * 0.272)}
+check120 := {x:Floor(wide * 0.246), y:Floor(high * 0.805)} ; 474 x 870
+alchemist_blood := {x:Floor(wide * 0.464), y:Floor(high * 0.762)}
+alchemist_dust := {x:Floor(wide * 0.660), y:Floor(high * 0.762)}
+alchemist_coin := {x:Floor(wide * 0.853), y:Floor(high * 0.762)}
+library_icon := {x:Floor(wide * 0.172), y:Floor(high * 0.611)}
+firestone_research := {x:Floor(wide * 0.95), y:Floor(high * 0.90)}
+firestone_1 := {x:Floor(wide * 0.263), y:Floor(high * 0.898)}
+firestone_2 := {x:Floor(wide * 0.599), y:Floor(high * 0.898)} ; 1150 x 970
 
 ;----------------------------
 ; Main clicker loop
 ;----------------------------
 Loop
 {
-  if (RunScript == false)
+  if (StopScript)
     break
 
   if (TinyBlock >= Max_TinyBlock)
@@ -252,111 +186,187 @@ Loop
     ;----------------------------
     ; special upgrade button
     ;----------------------------
-    Click, %x_upgrade_special%, %y_upgrade_special%
+    ClickPoint(upgrade_special, ColorGreen)
     Send {u} ; toggle upgrade pane
     TinyBlock := 0
   }
   else
   {
     ;----------------------------
-    ; click middle of the screen
+    ; middle of the screen
     ;----------------------------
-    Click, %x_middle_screen%, %y_middle_screen%
+    ClickPoint(middle_screen, false, 0)
     TinyBlock += 1
   }
   Sleep 120
   Send {3} ; keep party leader ability #3 active
 
+  if (StopScript)
+    break
+
   ;----------------------------
-  ; collect daily mystery box and check-in
+  ; daily mystery box & check-in
   ;----------------------------
-  if (DailyCollect == true)
+  if (DailyCollect)
   {
-    if(DailyReady == true && A_Hour == 10)
+    if(DailyReady && A_Hour == 10)
     {
       Send {space down}
       DailyReady := false
-      Click, %x_shop%, %y_shop%
-      Sleep 200
-      Click, %x_shop_gift%, %y_shop_gift%
-      Sleep 200
-      Click, %x_shop_calendar%, %y_shop_calendar%
-      Sleep 200
-      Click, %x_shop_checkin%, %y_shop_checkin%
-      Sleep 200
-      Click, %x_close_full%, %y_close_full%
-      Sleep 200
+      ClickPoint(shop_button)
+      ClickPoint(shop_gift)
+      ClickPoint(shop_calendar)
+      ClickPoint(shop_checkin)
+      ClickPoint(close_full)
       Send {space up}
     }
-    else if (DailyReady == false && A_Hour != 10)
+    else if (not DailyReady && A_Hour != 10)
     {
       DailyReady := true
     }
   }
 
   ;----------------------------
-  ; play tavern games
+  ; collect finished research
   ;----------------------------
-  if (TavernPlay == true)
+  if (ResearchCollect)
   {
-    if(TavernReady == true && Mod(A_Hour, TavernPeriod) == 0)
+    if(ResearchReady && !Mod(A_Min, ResearchPeriod))
+    {
+      ResearchReady := false
+
+      Send {space down}
+      Send {t}
+      Sleep 200
+      TestColor := GetColorAt(check120.x, check120.y)
+      if(!CompareColors(TestColor, ColorGray))
+      {
+        AboveLv120 := true
+        AboveLv50 := true
+      }
+      else
+      {
+        AboveLv120 := false
+      }
+      TestColor := GetColorAt(check50.x, check50.y)
+      if(!CompareColors(TestColor, ColorGray))
+      {
+        AboveLv50 := true
+      }
+      else
+      {
+        AboveLv50 := false
+      }
+
+      ; collect alchemist research
+      if (AboveLv120)
+      {
+        ClickPoint(check120)
+        ClickPoint(alchemist_blood, ColorOrange)
+        ClickPoint(alchemist_blood, ColorGreen)
+        ClickPoint(alchemist_dust, ColorOrange)
+        ClickPoint(alchemist_dust, ColorGreen)
+        ClickPoint(alchemist_coin, ColorOrange)
+        ClickPoint(alchemist_coin, ColorGreen)
+        ClickPoint(close_full)
+      }
+
+      ; collect library research
+      ClickPoint(library_icon)
+      ClickPoint(firestone_2, ColorGreen)
+      ClickPoint(firestone_2, ColorOrange)
+      ClickPoint(firestone_1, ColorGreen)
+      ClickPoint(firestone_1, ColorOrange)
+      ClickPoint(close_full)
+      ClickPoint(close_full)
+      Send {space up}
+    }
+    else if (!ResearchReady && Mod(A_Min, ResearchPeriod))
+    {
+      ResearchReady := true
+    }
+  }
+
+  if (StopScript)
+    break
+
+  ;----------------------------
+  ; tavern games
+  ;----------------------------
+  if (TavernPlay)
+  {
+    if(TavernReady && !Mod(A_Hour, TavernPeriod))
     {
       Send {space down}
       TavernReady := false
       Send {t}
       Sleep 200
-      Click, %x_tavern%, %y_tavern%
-      Sleep 200
-      Click, %x_tavern_get%, %y_tavern_get%
-      Sleep 200
-      Click, %x_tavern_tokens%, %y_tavern_tokens%
-      Sleep 2000
-      Click, %x_close_inset%, %y_close_inset%
-      Sleep 200
-      Click, %x_tavern_play5%, %y_tavern_play5%
-      Sleep 2500
-      Click, %x_tavern_card%, %y_tavern_card%
-      Sleep 5000
-      Click, %x_close_full%, %y_close_full%
-      Sleep 200
-      Click, %x_close_full%, %y_close_full%
-      Sleep 200
+      ClickPoint(tavern_icon)
+      TestColor := GetColorAt(tavern_play.x, tavern_play.y)
+      if(CompareColors(TestColor, ColorGreen))
+      {
+        ClickPoint(tavern_play, false, 2500)
+        ClickPoint(tavern_card, false, 5000)
+      }
+      else
+      {
+        ClickPoint(tavern_market)
+        ClickPoint(tavern_tokens, ColorTeal)
+        ClickPoint(close_inset)
+      }
+      TestColor := GetColorAt(tavern_play.x, tavern_play.y)
+      if(CompareColors(TestColor, ColorGreen))
+      {
+        ClickPoint(tavern_play, false, 2500)
+        ClickPoint(tavern_card, false, 5000)
+      }
+      ClickPoint(close_full)
+      ClickPoint(close_full)
       Send {space up}
     }
-    else if (TavernReady == false && Mod(A_Hour, TavernPeriod) != 0)
+    else if (!TavernReady && Mod(A_Hour, TavernPeriod))
     {
       TavernReady := true
     }
   }
 
+  if (StopScript)
+    break
+
   ;----------------------------
   ; daily and weekly quests
   ;----------------------------
-  if (QuestCollect == true)
+  if (QuestCollect)
   {
-    if(QuestReady == true && Mod(A_Hour, QuestPeriod) == 0)
+    if(QuestReady && !Mod(A_Hour, QuestPeriod))
     {
-      Send {space down}
       QuestReady := false
+      Send {space down}
       Send {q}
       Sleep 200
-      Click, %x_quest_daily%, %y_quest_daily%
-      Sleep 200
-      Click, %x_quest_claim%, %y_quest_claim%
-      Sleep 200
-      Click, %x_quest_weekly%, %y_quest_weekly%
-      Sleep 200
-      Click, %x_quest_claim%, %y_quest_claim%
-      Sleep 200
-      Click, %x_close_inset%, %y_close_inset%
-      Sleep 200
+      ClickPoint(quest_daily)
+      ClickPoint(quest_claim2, ColorGreen)
+      ClickPoint(map_okay, ColorGreen) ; verify this is same location
+      ClickPoint(quest_claim1, ColorGreen)
+      ClickPoint(map_okay, ColorGreen)
+      ClickPoint(quest_weekly)
+      ClickPoint(quest_weekly)
+      ClickPoint(quest_claim2, ColorGreen)
+      ClickPoint(map_okay, ColorGreen)
+      ClickPoint(quest_claim1, ColorGreen)
+      ClickPoint(map_okay, ColorGreen)
+      ClickPoint(quest_weekly)
+      ClickPoint(close_inset)
       Send {space up}
     }
-    else if (QuestReady == false && Mod(A_Hour, QuestPeriod) != 0)
+    else if (!QuestReady && Mod(A_Hour, QuestPeriod))
     {
       QuestReady := true
     }
   }
+
+  if (StopScript)
+    break
 
   ;----------------------------
   ; approx. every ~20 seconds
@@ -369,87 +379,80 @@ Loop
     DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
 
     ;----------------------------
-    ; claim map mission on top
+    ; train guardian (free)
     ;----------------------------
     Send {space down}
-    Send {m}
-    Sleep 200
-    Click, %x_map_claim%, %y_map_claim%
-    Sleep 200
-    Click, %x_map_okay%, %y_map_okay%
-    Sleep 200
-
-    ;----------------------------
-    ; claim campaign bonus
-    ;----------------------------
-    if (AboveLv50 == true)
-    {
-      Click, %x_campaign%, %y_campaign%
-      Sleep 200
-      Click, %x_campaign_claim%, %y_campaign_claim%
-      Sleep 200
-    }
-
-    Click, %x_close_full%, %y_close_full%
-    Sleep 200
+    Send {g}
+    Sleep 500
+    ClickPoint(train_guardian, ColorGreen)
+    ClickPoint(close_full)
     Send {space up}
 
-    if (RunScript == false)
+    if (StopScript)
       break
 
     ;----------------------------
     ; guild expeditions
     ;----------------------------
     Send {space down}
-    Click, %x_guild%, %y_guild%
-    Sleep 200
-    Click, %x_exped%, %y_exped%
-    Sleep 200
-    Click, %x_exped_button%, %y_exped_button%
-    Sleep 200
-    Click, %x_exped_button%, %y_exped_button%
-    Sleep 200
-    Click, %x_close_inset%, %y_close_inset%
-    Sleep 200
+    ClickPoint(guild_button)
+    ClickPoint(expeditions)
+    TestColor := GetColorAt(exped_button.x, exped_button.y)
+    if(CompareColors(TestColor, ColorGreen))
+    {
+      ClickPoint(exped_button)
+      ClickPoint(exped_button)
+    }
+    ClickPoint(close_inset)
 
     ;----------------------------
     ; collect free pickaxes
     ;----------------------------
-    if (AboveLv50 == true)
+    ClickPoint(guild_shop)
+    TestColor := GetColorAt(guild_shop_supplies.x, guild_shop_supplies.y)
+    if(CompareColors(TestColor, ColorBrown))
     {
-      Click, %x_guild_shop%, %y_guild_shop%
-      Sleep 200
-      Click, %x_guild_shop_supplies%, %y_guild_shop_supplies%
-      Sleep 200
-      Click, %x_guild_shop_pickaxes%, %y_guild_shop_pickaxes%
-      Sleep 200
-      Click, %x_close_full%, %y_close_full%
-      Sleep 200
+      AboveLv50 := true
+      ClickPoint(guild_shop_supplies)
+      ClickPoint(guild_shop_pickaxes, ColorGreen)
     }
+    else
+    {
+      AboveLv50 := false
+      AboveLv120 := false
+    }
+    ClickPoint(close_full)
 
     ;----------------------------
     ; close guild window
     ;----------------------------
-    Click, %x_close_full%, %y_close_full%
-    Sleep 200
+    ClickPoint(close_full)
     Send {space up}
 
-    if (RunScript == false)
+    if (StopScript)
       break
 
     ;----------------------------
-    ; train guardian (free)
+    ; claim map mission on top
     ;----------------------------
     Send {space down}
-    Send {g}
-    Sleep 500
-    Click, %x_train%, %y_train%
-    Sleep 500
-    Click, %x_close_full%, %y_close_full%
-    Sleep 500
+    Send {m}
+    Sleep 200
+    ClickPoint(map_claim)
+    ClickPoint(map_free, ColorOrange)
+    ClickPoint(map_okay)
+
+    ; claim campaign bonus
+    if (AboveLv50 == true)
+    {
+      ClickPoint(campaign_button)
+      ClickPoint(campaign_claim, ColorGreen)
+    }
+
+    ClickPoint(close_full)
     Send {space up}
 
-    if (RunScript == false)
+    if (StopScript)
       break
 
     ;----------------------------
@@ -458,23 +461,147 @@ Loop
     Send {space down}
     Send {u}
     Sleep 200
-    Click, %x_upgrade_special%, %y_upgrade_special%
-    Sleep 200
-    Click, %x_upgrade_guard%, %y_upgrade_guard%
-    Sleep 200
-    Click, %x_upgrade_hero1%, %y_upgrade_hero1%
-    Sleep 200
-    Click, %x_upgrade_hero2%, %y_upgrade_hero2%
-    Sleep 200
-    Click, %x_upgrade_hero3%, %y_upgrade_hero3%
-    Sleep 200
-    Click, %x_upgrade_hero4%, %y_upgrade_hero4%
-    Sleep 200
-    Click, %x_upgrade_hero5%, %y_upgrade_hero5%
-    Sleep 200
+    ClickPoint(upgrade_special, ColorGreen)
+    ClickPoint(upgrade_guard, ColorGreen)
+    ClickPoint(upgrade_hero1, ColorGreen)
+    ClickPoint(upgrade_hero2, ColorGreen)
+    ClickPoint(upgrade_hero3, ColorGreen)
+    ClickPoint(upgrade_hero4, ColorGreen)
+    ClickPoint(upgrade_hero5, ColorGreen)
     Send {u}
     Sleep 200
     Send {space up}
   }
 }
 return
+
+ClickPoint(TestPoint, TheColor:=false, DelayTime:=200)
+{
+  global WindowTitle
+  if not WinExist(WindowTitle)
+  {
+    ExitApp ; if we can't find the game then end the script
+  }
+
+  Xpos := TestPoint.x
+  Ypos := TestPoint.y
+
+  Result := GetColorAt(Xpos, Ypos)
+
+  if(TheColor == false)
+  {
+    Click, %Xpos%, %Ypos%
+    if (DelayTime > 0)
+      Sleep %DelayTime%
+    return
+  }
+
+  if(CompareColors(Result, TheColor))
+  {
+    Click, %Xpos%, %Ypos%
+    if (DelayTime > 0)
+      Sleep %DelayTime%
+    return
+  }
+}
+
+;-------------------------------------------------
+; Takes 2 RGB arrays, returns true if similar enough
+;-------------------------------------------------
+CompareColors(c1, c2, params:=false)
+{
+  r := Abs(c1.r - c2.r)
+  g := Abs(c1.g - c2.g)
+  b := Abs(c1.b - c2.b)
+
+  if (params == false)
+  {
+    if (r > 20 || g > 20 || b > 20)
+      return false
+    else
+      return true
+  }
+
+  if (r > params.r || g > params.g || b > params.b)
+    return false
+  else
+    return true
+}
+
+GetColorAt(Xpos, Ypos)
+{
+  PixelGetColor, ColorVariableName, Xpos, Ypos, RGB
+  return ColorArray(ColorVariableName)
+}
+
+;-------------------------------------------------
+; expects string (8 digit hex), returns object
+;-------------------------------------------------
+ColorArray(HexStr)
+{
+  MyObj := {}
+  MyObj.r := Hex2Dec(SubStr(HexStr, 3, 2))
+  MyObj.g := Hex2Dec(SubStr(HexStr, 5, 2))
+  MyObj.b := Hex2Dec(SubStr(HexStr, 7, 2))
+
+  return MyObj
+}
+
+;-------------------------------------------------
+; expects 2 digit hex number, returns decimal
+;-------------------------------------------------
+Hex2Dec(MyString)
+{
+  MyNum := 0
+
+  ; convert first digit
+  MyDigit := SubStr(MyString, 1, 1)
+  Switch (MyDigit)
+  {
+    Case "F":
+      MyNum := 240
+    Case "E":
+      MyNum := 224
+    Case "D":
+      MyNum := 208
+    Case "C":
+      MyNum := 192
+    Case "B":
+      MyNum := 176
+    Case "A":
+      MyNum := 160
+    Default:
+      MyNum := MyDigit * 16
+  }
+
+  ; convert second digit
+  MyDigit := SubStr(MyString, 2, 1)
+  Switch (MyDigit)
+  {
+    Case "F":
+      MyNum += 15
+    Case "E":
+      MyNum += 14
+    Case "D":
+      MyNum += 13
+    Case "C":
+      MyNum += 12
+    Case "B":
+      MyNum += 11
+    Case "A":
+      MyNum += 10
+    Default:
+      MyNum += MyDigit * 1
+  }
+
+  return MyNum
+}
+
+TellColor(TheColor)
+{
+  r := TheColor.r
+  g := TheColor.g
+  b := TheColor.b
+
+  MsgBox, R: %r%, G: %g%, B: %b%
+}
