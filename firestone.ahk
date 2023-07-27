@@ -5,7 +5,7 @@
 ; Automate boring bits of Firestone Idle RPG by Holiday Games.
 ; https://holydaygames.com/firestone-idle-rpg/
 ;
-; Run in full-screen mode, any resolution.
+; Run in full-screen mode, any resolution (NO black bar on top,bottom ,or sides).
 ;
 ; Use the Ctrl+` key (Ctrl+backtick) to activate and ` key (backtick by itself) to deactivate
 ;
@@ -83,6 +83,8 @@ Max_TinyBlock := 8 ; cycles between open/close upgrade panel
 Max_BigBlock := 20 ; minimum seconds between big block run time
 BigBlockMark := 0 ; current time in seconds
 StopScript := true ; default is true
+TimeDelay := 200
+TimeDelayShort := 120
 
 ColorOrange := { r:237, g:145, b:64 }
 ColorGreen := { r:10, g:160, b:8 }
@@ -139,65 +141,65 @@ DllCall("QueryPerformanceCounter", "UInt64*", BigBlockMark)
 StopScript := false
 
 ; screen coordinates of things
-middle_screen := {x:Floor(wide * 0.42), y:Floor(high * 0.30)}
-close_full := {x:Floor(wide * 0.973), y:Floor(high * 0.093)}
-close_inset := {x:Floor(wide * 0.924), y:Floor(high * 0.081)}
-upgrade_alert := {x:Floor(wide * 0.773), y:Floor(high * 0.854)} ; 1485 x 923
-upgrade_special := {x:Floor(wide * 0.981), y:Floor(high * 0.207)}
-upgrade_guard := {x:Floor(wide * 0.981), y:Floor(high * 0.31)}
-upgrade_hero1 := {x:Floor(wide * 0.981), y:Floor(high * 0.41)}
-upgrade_hero2 := {x:Floor(wide * 0.981), y:Floor(high * 0.52)}
-upgrade_hero3 := {x:Floor(wide * 0.981), y:Floor(high * 0.62)}
-upgrade_hero4 := {x:Floor(wide * 0.981), y:Floor(high * 0.73)}
-upgrade_hero5 := {x:Floor(wide * 0.981), y:Floor(high * 0.83)}
-train_guardian := {x:Floor(wide * 0.54), y:Floor(high * 0.74)}
-train_guardian_dust := {x:Floor(wide * 0.739), y:Floor(high * 0.733)}
-shop_button := {x:Floor(wide * 0.96), y:Floor(high * 0.55)}
-shop_gift := {x:Floor(wide * 0.35), y:Floor(high * 0.60)}
-shop_calendar := {x:Floor(wide * 0.737), y:Floor(high * 0.100)}
-shop_checkin := {x:Floor(wide * 0.705), y:Floor(high * 0.801)}
-tavern_icon := {x:Floor(wide * 0.406), y:Floor(high * 0.861)}
-tavern_market := {x:Floor(wide * 0.903), y:Floor(high * 0.074)}
-tavern_tokens := {x:Floor(wide * 0.343), y:Floor(high * 0.407)}
-tavern_play := {x:Floor(wide * 0.599), y:Floor(high * 0.926)}
-tavern_card := {x:Floor(wide * 0.5), y:Floor(high * 0.7)}
-tavern_discard := {x:Floor(wide * 0.525), y:Floor(high * 0.792)} ; 1007 x 855
-quest_daily := {x:Floor(wide * 0.375), y:Floor(high * 0.129)}
-quest_weekly := {x:Floor(wide * 0.589), y:Floor(high * 0.129)}
-quest_claim1 := {x:Floor(wide * 0.744), y:Floor(high * 0.296)}
-quest_claim2 := {x:Floor(wide * 0.744), y:Floor(high * 0.463)}
-quest_okay := {x:Floor(wide * 0.672), y:Floor(high * 0.657)} ; 1290 x 710
-guild_button := {x:Floor(wide * 0.96), y:Floor(high * 0.43)}
-guild_shop := {x:Floor(wide * 0.325), y:Floor(high * 0.237)}
-guild_shop_supplies := {x:Floor(wide * 0.130), y:Floor(high * 0.712)}
-guild_shop_pickaxes := {x:Floor(wide * 0.302), y:Floor(high * 0.602)}
-expeditions := {x:Floor(wide * 0.14), y:Floor(high * 0.35)}
-exped_button := {x:Floor(wide * 0.659), y:Floor(high * 0.300)}
-map_mission := {x:Floor(wide * 0.018), y:Floor(high * 0.238)}
-map_claim := {x:Floor(wide * 0.10), y:Floor(high * 0.30)}
-map_claim_big := {x:Floor(wide * 0.500), y:Floor(high * 0.903)}
-map_okay := {x:Floor(wide * 0.500), y:Floor(high * 0.453)}
-map_okay_background := {x:Floor(wide * 0.625), y:Floor(high * 0.345)}
-map_free := {x:Floor(wide * 0.585), y:Floor(high * 0.903)}
-campaign_icon := {x:Floor(wide * 0.96), y:Floor(high * 0.57)}
-campaign_claim := {x:Floor(wide * 0.11), y:Floor(high * 0.91)}
-campaign_alert := {x:Floor(wide * 0.988), y:Floor(high * 0.878)}
-campaign_missions := {x:Floor(wide * 0.935), y:Floor(high * 0.920)}
-campaign_liberation := {x:Floor(wide * 0.399), y:Floor(high * 0.745)}
-campaign_dungeon := {x:Floor(wide * 0.672), y:Floor(high * 0.745)}
-
-check50 := {x:Floor(wide * 0.190), y:Floor(high * 0.272)}
-check120 := {x:Floor(wide * 0.246), y:Floor(high * 0.805)}
-alchemist_blood := {x:Floor(wide * 0.464), y:Floor(high * 0.762)}
-alchemist_dust := {x:Floor(wide * 0.660), y:Floor(high * 0.762)}
-alchemist_coin := {x:Floor(wide * 0.853), y:Floor(high * 0.762)}
-alchemist_new_blood := {x:Floor(wide * 0.440), y:Floor(high * 0.745)}
-alchemist_new_dust := {x:Floor(wide * 0.628), y:Floor(high * 0.745)}
-alchemist_new_coin := {x:Floor(wide * 0.821), y:Floor(high * 0.745)}
-library_icon := {x:Floor(wide * 0.172), y:Floor(high * 0.611)}
-firestone_research := {x:Floor(wide * 0.95), y:Floor(high * 0.90)}
-firestone_1 := {x:Floor(wide * 0.263), y:Floor(high * 0.898)}
-firestone_2 := {x:Floor(wide * 0.599), y:Floor(high * 0.898)}
+middle_screen   := {x:Floor(wide * 0.420), y:Floor(high * 0.300)}
+close_full      := {x:Floor(wide * 0.957), y:Floor(high * 0.075)}
+close_inset     := {x:Floor(wide * 0.924), y:Floor(high * 0.105)}
+close_upgrade   := {x:Floor(wide * 0.971), y:Floor(high * 0.069)}
+upgrade_alert   := {x:Floor(wide * 0.758), y:Floor(high * 0.877)}
+upgrade_special := {x:Floor(wide * 0.854), y:Floor(high * 0.205)}
+upgrade_guard   := {x:Floor(wide * 0.854), y:Floor(high * 0.310)}
+upgrade_hero1   := {x:Floor(wide * 0.854), y:Floor(high * 0.415)}
+upgrade_hero2   := {x:Floor(wide * 0.854), y:Floor(high * 0.527)}
+upgrade_hero3   := {x:Floor(wide * 0.854), y:Floor(high * 0.639)}
+upgrade_hero4   := {x:Floor(wide * 0.854), y:Floor(high * 0.752)}
+upgrade_hero5   := {x:Floor(wide * 0.854), y:Floor(high * 0.858)}
+train_guardian  := {x:Floor(wide * 0.542), y:Floor(high * 0.757)}
+train_dust      := {x:Floor(wide * 0.753), y:Floor(high * 0.757)}
+shop_button     := {x:Floor(wide * 0.968), y:Floor(high * 0.555)}
+shop_gift       := {x:Floor(wide * 0.350), y:Floor(high * 0.600)}
+shop_calendar   := {x:Floor(wide * 0.734), y:Floor(high * 0.100)}
+shop_checkin    := {x:Floor(wide * 0.707), y:Floor(high * 0.807)}
+tavern_icon     := {x:Floor(wide * 0.395), y:Floor(high * 0.893)}
+tavern_market   := {x:Floor(wide * 0.895), y:Floor(high * 0.043)}
+tavern_tokens   := {x:Floor(wide * 0.343), y:Floor(high * 0.394)}
+tavern_play     := {x:Floor(wide * 0.603), y:Floor(high * 0.903)}
+tavern_card     := {x:Floor(wide * 0.500), y:Floor(high * 0.700)}
+tavern_discard  := {x:Floor(wide * 0.525), y:Floor(high * 0.807)}
+quest_daily     := {x:Floor(wide * 0.375), y:Floor(high * 0.130)}
+quest_weekly    := {x:Floor(wide * 0.589), y:Floor(high * 0.130)}
+quest_claim1    := {x:Floor(wide * 0.744), y:Floor(high * 0.285)}
+quest_claim2    := {x:Floor(wide * 0.744), y:Floor(high * 0.463)}
+quest_okay      := {x:Floor(wide * 0.672), y:Floor(high * 0.657)} ; 1290 x 710
+guild_button    := {x:Floor(wide * 0.967), y:Floor(high * 0.427)}
+guild_shop      := {x:Floor(wide * 0.320), y:Floor(high * 0.229)}
+guild_supplies  := {x:Floor(wide * 0.130), y:Floor(high * 0.713)}
+guild_pickaxes  := {x:Floor(wide * 0.302), y:Floor(high * 0.607)}
+expeditions     := {x:Floor(wide * 0.140), y:Floor(high * 0.385)}
+exped_button    := {x:Floor(wide * 0.638), y:Floor(high * 0.277)}
+map_mission     := {x:Floor(wide * 0.025), y:Floor(high * 0.235)}
+map_claim       := {x:Floor(wide * 0.100), y:Floor(high * 0.300)}
+map_claim_big   := {x:Floor(wide * 0.500), y:Floor(high * 0.911)}
+map_okay        := {x:Floor(wide * 0.520), y:Floor(high * 0.442)}
+map_okay_bg     := {x:Floor(wide * 0.625), y:Floor(high * 0.345)} ; 
+map_free        := {x:Floor(wide * 0.585), y:Floor(high * 0.903)}
+campaign_icon   := {x:Floor(wide * 0.960), y:Floor(high * 0.570)}
+campaign_claim  := {x:Floor(wide * 0.117), y:Floor(high * 0.925)}
+campaign_alert  := {x:Floor(wide * 0.974), y:Floor(high * 0.907)}
+wm_missions     := {x:Floor(wide * 0.935), y:Floor(high * 0.945)}
+wm_liberation   := {x:Floor(wide * 0.399), y:Floor(high * 0.757)}
+wm_dungeon      := {x:Floor(wide * 0.672), y:Floor(high * 0.757)}
+check50         := {x:Floor(wide * 0.190), y:Floor(high * 0.272)} ; 364 x 294?
+check120        := {x:Floor(wide * 0.242), y:Floor(high * 0.815)}
+alchemist_blood := {x:Floor(wide * 0.464), y:Floor(high * 0.753)}
+alchemist_dust  := {x:Floor(wide * 0.660), y:Floor(high * 0.753)}
+alchemist_coin  := {x:Floor(wide * 0.853), y:Floor(high * 0.753)}
+alch_new_blood  := {x:Floor(wide * 0.440), y:Floor(high * 0.753)}
+alch_new_dust   := {x:Floor(wide * 0.628), y:Floor(high * 0.753)}
+alch_new_coin   := {x:Floor(wide * 0.821), y:Floor(high * 0.753)}
+library_icon    := {x:Floor(wide * 0.144), y:Floor(high * 0.620)}
+fire_research   := {x:Floor(wide * 0.940), y:Floor(high * 0.925)}
+firestone_1     := {x:Floor(wide * 0.288), y:Floor(high * 0.910)}
+firestone_2     := {x:Floor(wide * 0.638), y:Floor(high * 0.910)}
 
 ;----------------------------
 ; Main clicker loop
@@ -215,11 +217,11 @@ Loop
   {
     Send {space down}
     ; check if upgrade window open/close
-    TestColor := GetColorAt(close_full.x, close_full.y)
+    TestColor := GetColorAt(close_upgrade.x, close_upgrade.y)
     if(!CompareColors(TestColor, ColorRed))
     {
       Send {u} ; toggle upgrade pane
-      Sleep 200
+      Sleep %TimeDelay%
     }
 
     TinyBlock := false
@@ -249,7 +251,7 @@ Loop
         break
     }
     Send {u} ; toggle upgrade pane
-    Sleep 200
+    Sleep %TimeDelay%
     Send {space up}
   }
 
@@ -289,7 +291,7 @@ Loop
 
       Send {space down}
       Send {t}
-      Sleep 200
+      Sleep %TimeDelay%
       TestColor := GetColorAt(check120.x, check120.y)
       if(!CompareColors(TestColor, ColorGray))
       {
@@ -317,15 +319,15 @@ Loop
         ClickPoint(alchemist_blood, ColorOrange)
         ClickPoint(alchemist_blood, ColorGreen)
         if(NewAlchemistBlood)
-          ClickPoint(alchemist_new_blood)
+          ClickPoint(alch_new_blood)
         ClickPoint(alchemist_dust, ColorOrange)
         ClickPoint(alchemist_dust, ColorGreen)
         if(NewAlchemistDust)
-          ClickPoint(alchemist_new_dust)
+          ClickPoint(alch_new_dust)
         ClickPoint(alchemist_coin, ColorOrange)
         ClickPoint(alchemist_coin, ColorGreen)
         if(NewAlchemistCoin)
-          ClickPoint(alchemist_new_coin)
+          ClickPoint(alch_new_coin)
         ClickPoint(close_full)
       }
 
@@ -358,7 +360,7 @@ Loop
       Send {space down}
       TavernReady := false
       Send {t}
-      Sleep 200
+      Sleep %TimeDelay%
       ClickPoint(tavern_icon)
       TestColor := GetColorAt(tavern_play.x, tavern_play.y)
       if(CompareColors(TestColor, ColorGreen))
@@ -369,7 +371,7 @@ Loop
         TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         while(!CompareColors(TestColor, ColorBlue))
         {
-          Sleep 200
+          Sleep %TimeDelay%
           TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         }
       }
@@ -388,7 +390,7 @@ Loop
         TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         while(!CompareColors(TestColor, ColorBlue))
         {
-          Sleep 200
+          Sleep %TimeDelay%
           TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         }
       }
@@ -415,7 +417,7 @@ Loop
       QuestReady := false
       Send {space down}
       Send {q}
-      Sleep 200
+      Sleep %TimeDelay%
       ClickPoint(quest_daily)
       ClickPoint(quest_claim2, ColorGreen)
       ClickPoint(quest_okay, ColorGreen)
@@ -458,7 +460,7 @@ Loop
     Sleep 500
     ClickPoint(train_guardian, ColorGreen)
     if(GuardianEnlightenment)
-      ClickPoint(train_guardian_dust, ColorGreen)
+      ClickPoint(train_dust, ColorGreen)
     ClickPoint(close_full)
     Send {space up}
 
@@ -483,12 +485,12 @@ Loop
     ; collect free pickaxes
     ;----------------------------
     ClickPoint(guild_shop)
-    TestColor := GetColorAt(guild_shop_supplies.x, guild_shop_supplies.y)
+    TestColor := GetColorAt(guild_supplies.x, guild_supplies.y)
     if(CompareColors(TestColor, ColorBrown))
     {
       AboveLv50 := true
-      ClickPoint(guild_shop_supplies)
-      ClickPoint(guild_shop_pickaxes, ColorDarkGreen)
+      ClickPoint(guild_supplies)
+      ClickPoint(guild_pickaxes, ColorDarkGreen)
     }
     else
     {
@@ -511,18 +513,18 @@ Loop
     ;----------------------------
     Send {space down}
     Send {m}
-    Sleep 200
+    Sleep %TimeDelay%
     TestColor := GetColorAt(map_mission.x, map_mission.y)
     if(CompareColors(TestColor, ColorBeige))
     {
       ClickPoint(map_claim)
-      TestColor := GetColorAt(map_okay.x, map_okay_background.y)
+      TestColor := GetColorAt(map_okay.x, map_okay_bg.y)
       if(CompareColors(TestColor, ColorBeige))
       {
         ClickPoint(map_claim_big, ColorGreen)
         ClickPoint(map_free, ColorOrange)
       }
-      TestColor := GetColorAt(map_okay_background.x, map_okay_background.y)
+      TestColor := GetColorAt(map_okay_bg.x, map_okay_bg.y)
       if(CompareColors(TestColor, ColorBeige))
         ClickPoint(map_okay, ColorGreen)
     }
@@ -544,7 +546,7 @@ Loop
     ;
     Send {space down}
     Send {u} ; toggle upgrade pane
-    Sleep 200
+    Sleep %TimeDelay%
     TinyBlock := false
     loop
     {
@@ -572,13 +574,13 @@ Loop
         break
     }
     Send {u} ; toggle upgrade pane
-    Sleep 200
+    Sleep %TimeDelay%
     Send {space up}
   }
 }
 return
 
-ClickPoint(TestPoint, TheColor:=false, DelayTime:=200)
+ClickPoint(TestPoint, TheColor:=false, TheDelay:=200)
 {
   global WindowTitle
   if not WinExist(WindowTitle)
@@ -594,16 +596,16 @@ ClickPoint(TestPoint, TheColor:=false, DelayTime:=200)
   if(!TheColor)
   {
     Click, %Xpos%, %Ypos%
-    if(DelayTime)
-      Sleep %DelayTime%
+    if(TheDelay)
+      Sleep %TheDelay%
     return true
   }
 
   if(CompareColors(Result, TheColor))
   {
     Click, %Xpos%, %Ypos%
-    if(DelayTime)
-      Sleep %DelayTime%
+    if(TheDelay)
+      Sleep %TheDelay%
     return true
   }
 
