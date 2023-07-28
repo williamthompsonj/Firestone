@@ -1,6 +1,6 @@
 ﻿;------------------------------------------------------------------------------
 ; Copyright (c) William J. Thompson
-; 27 July 2023 @ 00:00am PST
+; 28 July 2023 @ 00:00am PST
 ;
 ; Automate boring bits of Firestone Idle RPG by Holiday Games.
 ; https://holydaygames.com/firestone-idle-rpg/
@@ -146,13 +146,13 @@ close_full      := {x:Floor(wide * 0.957), y:Floor(high * 0.075)}
 close_inset     := {x:Floor(wide * 0.924), y:Floor(high * 0.105)}
 close_upgrade   := {x:Floor(wide * 0.971), y:Floor(high * 0.069)}
 upgrade_alert   := {x:Floor(wide * 0.758), y:Floor(high * 0.877)}
-upgrade_special := {x:Floor(wide * 0.966), y:Floor(high * 0.186)}
-upgrade_guard   := {x:Floor(wide * 0.966), y:Floor(high * 0.295)}
-upgrade_hero1   := {x:Floor(wide * 0.966), y:Floor(high * 0.406)}
-upgrade_hero2   := {x:Floor(wide * 0.966), y:Floor(high * 0.517)}
-upgrade_hero3   := {x:Floor(wide * 0.966), y:Floor(high * 0.628)}
-upgrade_hero4   := {x:Floor(wide * 0.966), y:Floor(high * 0.740)}
-upgrade_hero5   := {x:Floor(wide * 0.966), y:Floor(high * 0.852)}
+upgrade_special := {x:Floor(wide * 0.976), y:Floor(high * 0.186)}
+upgrade_guard   := {x:Floor(wide * 0.976), y:Floor(high * 0.295)}
+upgrade_hero1   := {x:Floor(wide * 0.976), y:Floor(high * 0.406)}
+upgrade_hero2   := {x:Floor(wide * 0.976), y:Floor(high * 0.517)}
+upgrade_hero3   := {x:Floor(wide * 0.976), y:Floor(high * 0.628)}
+upgrade_hero4   := {x:Floor(wide * 0.976), y:Floor(high * 0.740)}
+upgrade_hero5   := {x:Floor(wide * 0.976), y:Floor(high * 0.852)}
 train_guardian  := {x:Floor(wide * 0.542), y:Floor(high * 0.757)}
 train_dust      := {x:Floor(wide * 0.753), y:Floor(high * 0.757)}
 shop_button     := {x:Floor(wide * 0.968), y:Floor(high * 0.555)}
@@ -181,7 +181,7 @@ map_claim       := {x:Floor(wide * 0.100), y:Floor(high * 0.300)}
 map_claim_big   := {x:Floor(wide * 0.500), y:Floor(high * 0.911)}
 map_okay        := {x:Floor(wide * 0.520), y:Floor(high * 0.442)}
 map_okay_bg     := {x:Floor(wide * 0.625), y:Floor(high * 0.345)}
-map_free        := {x:Floor(wide * 0.579), y:Floor(high * 0.884)}
+map_free        := {x:Floor(wide * 0.592), y:Floor(high * 0.930)}
 campaign_icon   := {x:Floor(wide * 0.960), y:Floor(high * 0.570)}
 campaign_claim  := {x:Floor(wide * 0.117), y:Floor(high * 0.925)}
 campaign_alert  := {x:Floor(wide * 0.974), y:Floor(high * 0.907)}
@@ -221,26 +221,25 @@ Loop
     if(!CompareColors(TestColor, ColorRed))
     {
       Send {u} ; toggle upgrade pane
-      TempNum := TimeDelay + TimeDelay
-      Sleep %TempNum%
+      Sleep %TimeDelay%
     }
 
     loop
     {
       TinyBlock := false
-      if(ClickPoint(upgrade_special, ColorGreen))
+      if(ClickPoint(upgrade_special, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_guard, ColorGreen))
+      if(ClickPoint(upgrade_guard, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero1, ColorGreen))
+      if(ClickPoint(upgrade_hero1, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero2, ColorGreen))
+      if(ClickPoint(upgrade_hero2, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero3, ColorGreen))
+      if(ClickPoint(upgrade_hero3, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero4, ColorGreen))
+      if(ClickPoint(upgrade_hero4, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero5, ColorGreen))
+      if(ClickPoint(upgrade_hero5, ColorGreen, TimeDelayShort))
         TinyBlock := true
 
       if(!TinyBlock)
@@ -544,27 +543,26 @@ Loop
 
     Send {space down}
     Send {u} ; toggle upgrade pane
-    TempNum := TimeDelay + TimeDelay
-    Sleep %TempNum%
+    Sleep %TimeDelay%
     TinyBlock := false
     loop
     {
       if(StopScript)
         break
 
-      if(ClickPoint(upgrade_special, ColorGreen))
+      if(ClickPoint(upgrade_special, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_guard, ColorGreen))
+      if(ClickPoint(upgrade_guard, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero1, ColorGreen))
+      if(ClickPoint(upgrade_hero1, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero2, ColorGreen))
+      if(ClickPoint(upgrade_hero2, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero3, ColorGreen))
+      if(ClickPoint(upgrade_hero3, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero4, ColorGreen))
+      if(ClickPoint(upgrade_hero4, ColorGreen, TimeDelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero5, ColorGreen))
+      if(ClickPoint(upgrade_hero5, ColorGreen, TimeDelayShort))
         TinyBlock := true
 
       if(TinyBlock)
