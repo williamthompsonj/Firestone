@@ -84,10 +84,11 @@ Max_TinyBlock := 8 ; cycles between open/close upgrade panel
 Max_BigBlock := 20 ; minimum seconds between big block run time
 BigBlockMark := 0 ; current time in seconds
 StopScript := true ; default is true
-TimeDelay := 200
-TimeDelayShort := 120
+DelayLong := 200
+DelayShort := 120
 wide := 0
 high := 0
+ActiveWindowTitle := false
 
 ColorOrange := { r:237, g:145, b:64 }
 ColorGreen := { r:10, g:160, b:8 }
@@ -201,7 +202,7 @@ firestone_2     := {x:Floor(wide * 0.638), y:Floor(high * 0.910)}
 ;----------------------------
 ; Main clicker loop
 ;----------------------------
-Loop
+loop
 {
   if(StopScript)
     break
@@ -218,35 +219,37 @@ Loop
     if(!CompareColors(TestColor, ColorRed))
     {
       Send {u} ; toggle upgrade pane
-      Sleep %TimeDelay%
+      Sleep %DelayLong%
     }
 
     loop
     {
+      if(StopScript)
+        break
+
       TinyBlock := false
-      if(ClickPoint(upgrade_special, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_special, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_guard, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_guard, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero1, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero1, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero2, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero2, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero3, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero3, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero4, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero4, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero5, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero5, ColorGreen, DelayShort))
         TinyBlock := true
 
       if(!TinyBlock)
         break
 
-      if(StopScript)
-        break
+      Send {3} ; keep party leader ability #3 active
     }
     Send {u} ; toggle upgrade pane
-    Sleep %TimeDelay%
+    Sleep %DelayLong%
     Send {space up}
   }
 
@@ -286,7 +289,7 @@ Loop
 
       Send {space down}
       Send {t}
-      Sleep %TimeDelay%
+      Sleep %DelayLong%
       TestColor := GetColorAt(check120.x, check120.y)
       if(!CompareColors(TestColor, ColorGray))
       {
@@ -355,7 +358,7 @@ Loop
       Send {space down}
       TavernReady := false
       Send {t}
-      Sleep %TimeDelay%
+      Sleep %DelayLong%
       ClickPoint(tavern_icon)
       TestColor := GetColorAt(tavern_play.x, tavern_play.y)
       if(CompareColors(TestColor, ColorGreen))
@@ -366,7 +369,7 @@ Loop
         TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         while(!CompareColors(TestColor, ColorBlue))
         {
-          Sleep %TimeDelay%
+          Sleep %DelayLong%
           TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         }
       }
@@ -385,7 +388,7 @@ Loop
         TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         while(!CompareColors(TestColor, ColorBlue))
         {
-          Sleep %TimeDelay%
+          Sleep %DelayLong%
           TestColor := GetColorAt(tavern_discard.x, tavern_discard.y)
         }
       }
@@ -412,7 +415,7 @@ Loop
       QuestReady := false
       Send {space down}
       Send {q}
-      Sleep %TimeDelay%
+      Sleep %DelayLong%
       ClickPoint(quest_daily)
       ClickPoint(quest_claim2, ColorGreen)
       ClickPoint(quest_okay, ColorGreen)
@@ -508,7 +511,7 @@ Loop
     ;----------------------------
     Send {space down}
     Send {m}
-    Sleep %TimeDelay%
+    Sleep %DelayLong%
     TestColor := GetColorAt(map_mission.x, map_mission.y)
     if(CompareColors(TestColor, ColorBeige))
     {
@@ -540,35 +543,35 @@ Loop
 
     Send {space down}
     Send {u} ; toggle upgrade pane
-    Sleep %TimeDelay%
+    Sleep %DelayLong%
     TinyBlock := false
     loop
     {
       if(StopScript)
         break
 
-      if(ClickPoint(upgrade_special, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_special, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_guard, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_guard, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero1, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero1, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero2, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero2, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero3, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero3, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero4, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero4, ColorGreen, DelayShort))
         TinyBlock := true
-      if(ClickPoint(upgrade_hero5, ColorGreen, TimeDelayShort))
+      if(ClickPoint(upgrade_hero5, ColorGreen, DelayShort))
         TinyBlock := true
 
-      if(TinyBlock)
-        TinyBlock := false
-      else
+      if(!TinyBlock)
         break
+
+      Send {3} ; keep party leader ability #3 active
     }
     Send {u} ; toggle upgrade pane
-    Sleep %TimeDelay%
+    Sleep %DelayLong%
     Send {space up}
   }
 }
@@ -696,22 +699,28 @@ Hex2Dec(MyString)
 
 FirestoneWindow()
 {
-  global WindowTitle, WindowTitle2, wide, high
+  global ActiveWindowTitle, WindowTitle, WindowTitle2, wide, high
+  if(ActiveWindowTitle && WinExist(ActiveWindowTitle))
+  {
+    return
+  }
+
   if(WinExist(WindowTitle))
   {
+    ActiveWindowTitle := WindowTitle
     WinActivate
     WinGetPos, , , wide, high
     return
   }
-  else if(WinExist(WindowTitle2))
+
+  if(WinExist(WindowTitle2))
   {
+    ActiveWindowTitle := WindowTitle2
     WinActivate
     WinGetPos, , , wide, high
     return
   }
-  else
-  {
-    MsgBox, Cannot find Firestone
-    ExitApp
-  }
+
+  MsgBox, Cannot find Firestone
+  ExitApp
 }
