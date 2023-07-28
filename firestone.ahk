@@ -5,9 +5,10 @@
 ; Automate boring bits of Firestone Idle RPG by Holiday Games.
 ; https://holydaygames.com/firestone-idle-rpg/
 ;
-; Run in full-screen mode, any resolution (NO black bar on top,bottom ,or sides).
+; Run in full-screen mode, any resolution (NO BLACK BORDER on top, bottom ,or sides).
 ;
 ; Use the Ctrl+` key (Ctrl+backtick) to activate and ` key (backtick by itself) to deactivate
+; Kill script (completely exit) by pressing F6
 ;
 ; Actions this script performs:
 ; -----------------------------
@@ -29,7 +30,7 @@
 WindowTitle := "Firestone"
 
 ; Kongregate website title
-;WindowTitle := "Play Firestone"
+WindowTitle2 := "Play Firestone"
 
 ;----------------------------
 ; collect daily mystery gift and check-in
@@ -103,10 +104,17 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ;----------------------------------------------------------
+; Hard exit the script if user presses F6
+;----------------------------------------------------------
+F6::
+ExitApp
+return
+
+;----------------------------------------------------------
 ; Stop when user presses ` key (backtick)
 ;----------------------------------------------------------
 `::
-if !WinExist(WindowTitle)
+if !WinExist(WindowTitle) && !!WinExist(WindowTitle2)
 {
   ExitApp
 }
@@ -119,7 +127,12 @@ return
 ;----------------------------------------------------------
 ^`::
 ; find and focus on Firestone window
-if WinExist(WindowTitle)
+if(WinExist(WindowTitle))
+{
+  WinActivate
+  WinGetPos, , , wide, high
+}
+else if(WinExist(WindowTitle2))
 {
   WinActivate
   WinGetPos, , , wide, high
