@@ -544,11 +544,12 @@ loop
     Send {space down}
     Send {u} ; toggle upgrade pane
     Sleep %DelayLong%
-    TinyBlock := false
     loop
     {
       if(StopScript)
         break
+
+      TinyBlock := false
 
       if(ClickPoint(upgrade_special, ColorGreen, DelayShort))
         TinyBlock := true
