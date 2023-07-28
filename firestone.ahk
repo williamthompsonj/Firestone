@@ -146,13 +146,13 @@ close_full      := {x:Floor(wide * 0.957), y:Floor(high * 0.075)}
 close_inset     := {x:Floor(wide * 0.924), y:Floor(high * 0.105)}
 close_upgrade   := {x:Floor(wide * 0.971), y:Floor(high * 0.069)}
 upgrade_alert   := {x:Floor(wide * 0.758), y:Floor(high * 0.877)}
-upgrade_special := {x:Floor(wide * 0.854), y:Floor(high * 0.205)}
-upgrade_guard   := {x:Floor(wide * 0.854), y:Floor(high * 0.310)}
-upgrade_hero1   := {x:Floor(wide * 0.854), y:Floor(high * 0.415)}
-upgrade_hero2   := {x:Floor(wide * 0.854), y:Floor(high * 0.527)}
-upgrade_hero3   := {x:Floor(wide * 0.854), y:Floor(high * 0.639)}
-upgrade_hero4   := {x:Floor(wide * 0.854), y:Floor(high * 0.752)}
-upgrade_hero5   := {x:Floor(wide * 0.854), y:Floor(high * 0.858)}
+upgrade_special := {x:Floor(wide * 0.966), y:Floor(high * 0.186)}
+upgrade_guard   := {x:Floor(wide * 0.966), y:Floor(high * 0.295)}
+upgrade_hero1   := {x:Floor(wide * 0.966), y:Floor(high * 0.406)}
+upgrade_hero2   := {x:Floor(wide * 0.966), y:Floor(high * 0.517)}
+upgrade_hero3   := {x:Floor(wide * 0.966), y:Floor(high * 0.628)}
+upgrade_hero4   := {x:Floor(wide * 0.966), y:Floor(high * 0.740)}
+upgrade_hero5   := {x:Floor(wide * 0.966), y:Floor(high * 0.852)}
 train_guardian  := {x:Floor(wide * 0.542), y:Floor(high * 0.757)}
 train_dust      := {x:Floor(wide * 0.753), y:Floor(high * 0.757)}
 shop_button     := {x:Floor(wide * 0.968), y:Floor(high * 0.555)}
@@ -221,12 +221,13 @@ Loop
     if(!CompareColors(TestColor, ColorRed))
     {
       Send {u} ; toggle upgrade pane
-      Sleep %TimeDelay%
+      TempNum := TimeDelay + TimeDelay
+      Sleep %TempNum%
     }
 
-    TinyBlock := false
     loop
     {
+      TinyBlock := false
       if(ClickPoint(upgrade_special, ColorGreen))
         TinyBlock := true
       if(ClickPoint(upgrade_guard, ColorGreen))
@@ -242,9 +243,7 @@ Loop
       if(ClickPoint(upgrade_hero5, ColorGreen))
         TinyBlock := true
 
-      if(TinyBlock)
-        TinyBlock := false
-      else
+      if(!TinyBlock)
         break
 
       if(StopScript)
@@ -543,10 +542,10 @@ Loop
     if(StopScript)
       break
 
-    ;
     Send {space down}
     Send {u} ; toggle upgrade pane
-    Sleep %TimeDelay%
+    TempNum := TimeDelay + TimeDelay
+    Sleep %TempNum%
     TinyBlock := false
     loop
     {
