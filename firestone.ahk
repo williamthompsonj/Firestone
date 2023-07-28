@@ -86,6 +86,8 @@ BigBlockMark := 0 ; current time in seconds
 StopScript := true ; default is true
 TimeDelay := 200
 TimeDelayShort := 120
+wide := 0
+high := 0
 
 ColorOrange := { r:237, g:145, b:64 }
 ColorGreen := { r:10, g:160, b:8 }
@@ -114,11 +116,7 @@ return
 ; Stop when user presses ` key (backtick)
 ;----------------------------------------------------------
 `::
-if !WinExist(WindowTitle) && !!WinExist(WindowTitle2)
-{
-  ExitApp
-}
-
+FirestoneWindow()
 StopScript := true
 return
 
@@ -127,21 +125,7 @@ return
 ;----------------------------------------------------------
 ^`::
 ; find and focus on Firestone window
-if(WinExist(WindowTitle))
-{
-  WinActivate
-  WinGetPos, , , wide, high
-}
-else if(WinExist(WindowTitle2))
-{
-  WinActivate
-  WinGetPos, , , wide, high
-}
-else
-{
-  MsgBox, "Cannot find Firestone"
-  return
-}
+FirestoneWindow()
 
 ;----------------------------
 ; setup everything to run
@@ -592,11 +576,7 @@ return
 
 ClickPoint(TestPoint, TheColor:=false, TheDelay:=200)
 {
-  global WindowTitle
-  if not WinExist(WindowTitle)
-  {
-    ExitApp ; if we can't find the game then end the script
-  }
+  FirestoneWindow()
 
   Xpos := TestPoint.x
   Ypos := TestPoint.y
@@ -714,11 +694,24 @@ Hex2Dec(MyString)
   return MyNum
 }
 
-TellColor(TheColor)
+FirestoneWindow()
 {
-  r := TheColor.r
-  g := TheColor.g
-  b := TheColor.b
-
-  MsgBox, R: %r%, G: %g%, B: %b%
+  global WindowTitle, WindowTitle2, wide, high
+  if(WinExist(WindowTitle))
+  {
+    WinActivate
+    WinGetPos, , , wide, high
+    return
+  }
+  else if(WinExist(WindowTitle2))
+  {
+    WinActivate
+    WinGetPos, , , wide, high
+    return
+  }
+  else
+  {
+    MsgBox, Cannot find Firestone
+    ExitApp
+  }
 }
