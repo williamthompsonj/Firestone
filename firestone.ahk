@@ -188,12 +188,12 @@ wm_liberation   := {x:Floor(wide * 0.400), y:Floor(high * 0.760)}
 wm_dungeon      := {x:Floor(wide * 0.600), y:Floor(high * 0.760)}
 check50         := {x:Floor(wide * 0.190), y:Floor(high * 0.272)} ; 364 x 294?
 check120        := {x:Floor(wide * 0.242), y:Floor(high * 0.815)}
-alchemist_blood := {x:Floor(wide * 0.465), y:Floor(high * 0.751)}
+alchemist_blood := {x:Floor(wide * 0.467), y:Floor(high * 0.752)}
 alchemist_dust  := {x:Floor(wide * 0.660), y:Floor(high * 0.739)}
 alchemist_coin  := {x:Floor(wide * 0.853), y:Floor(high * 0.739)}
-alch_new_blood  := {x:Floor(wide * 0.440), y:Floor(high * 0.739)}
-alch_new_dust   := {x:Floor(wide * 0.628), y:Floor(high * 0.739)}
-alch_new_coin   := {x:Floor(wide * 0.821), y:Floor(high * 0.739)}
+alch_new_blood  := {x:Floor(wide * 0.440), y:Floor(high * 0.735)}
+alch_new_dust   := {x:Floor(wide * 0.628), y:Floor(high * 0.735)}
+alch_new_coin   := {x:Floor(wide * 0.821), y:Floor(high * 0.735)}
 library_icon    := {x:Floor(wide * 0.144), y:Floor(high * 0.620)}
 fire_research   := {x:Floor(wide * 0.940), y:Floor(high * 0.925)}
 firestone_1     := {x:Floor(wide * 0.288), y:Floor(high * 0.910)}
@@ -314,18 +314,18 @@ loop
       if(AboveLv120)
       {
         ClickPoint(check120)
-        if(!ClickPoint(alchemist_blood, ColorOrange))
-          ClickPoint(alchemist_blood, ColorGreen)
+        if(!ClickPoint(alchemist_blood, ColorGreen))
+          ClickPoint(alchemist_blood, ColorOrange)
         if(NewAlchemistBlood)
-          ClickPoint(alch_new_blood)
-        if(!ClickPoint(alchemist_dust, ColorOrange))
-        ClickPoint(alchemist_dust, ColorGreen)
+          ClickPoint(alch_new_blood, ColorGreen)
+        if(!ClickPoint(alchemist_dust, ColorGreen))
+        ClickPoint(alchemist_dust, ColorOrange)
         if(NewAlchemistDust)
-          ClickPoint(alch_new_dust)
-        if(!ClickPoint(alchemist_coin, ColorOrange))
-        ClickPoint(alchemist_coin, ColorGreen)
+          ClickPoint(alch_new_dust, ColorGreen)
+        if(!ClickPoint(alchemist_coin, ColorGreen))
+        ClickPoint(alchemist_coin, ColorOrange)
         if(NewAlchemistCoin)
-          ClickPoint(alch_new_coin)
+          ClickPoint(alch_new_coin, ColorGreen)
         ClickPoint(close_full)
       }
 
